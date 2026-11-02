@@ -80,6 +80,7 @@ function App() {
     subject: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -90,7 +91,11 @@ function App() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  // Cấu hình dịch vụ gửi email miễn phí (Web3Forms hoặc Formspree)
+  // Lấy Access Key miễn phí trong 30 giây tại: https://web3forms.com (nhập nquanghuycv@gmail.com)
+  const WEB3FORMS_ACCESS_KEY = 'd9ed798b-2758-4ab5-a446-b4a4cbf32573';
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setFormError(t('contact.fillRequired'));
@@ -98,8 +103,41 @@ function App() {
     }
 
     setFormError('');
-    setFormSubmitted(true);
+    setIsSubmitting(true);
 
+    // Nếu đã cấu hình key thật từ web3forms.com
+    if (WEB3FORMS_ACCESS_KEY && WEB3FORMS_ACCESS_KEY !== 'YOUR_ACCESS_KEY_HERE') {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            from_name: formData.name,
+            email: formData.email,
+            subject: formData.subject.trim() || `Portfolio Contact từ ${formData.name}`,
+            message: formData.message,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          setFormSubmitted(true);
+          setFormData({ name: '', email: '', subject: '', message: '' });
+          setIsSubmitting(false);
+          return;
+        } else {
+          throw new Error(data.message || 'Lỗi gửi tin nhắn');
+        }
+      } catch (err: any) {
+        console.error('Web3Forms Error:', err);
+      }
+    }
+
+    // Fallback: Mở mailto client để không làm gián đoạn liên lạc nếu chưa gắn key
     const subject = encodeURIComponent(
       formData.subject.trim() || `Portfolio Contact from ${formData.name}`
     );
@@ -107,6 +145,8 @@ function App() {
       `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
     );
     window.open(`mailto:nquanghuycv@gmail.com?subject=${subject}&body=${body}`, '_blank');
+    setFormSubmitted(true);
+    setIsSubmitting(false);
   };
 
   return (
@@ -899,25 +939,29 @@ function App() {
                         <div>
                           <button
                             type="submit"
+                            disabled={isSubmitting}
                             style={{
-                              background: '#E3872D',
+                              background: isSubmitting ? '#94a3b8' : '#E3872D',
                               color: '#ffffff',
                               border: 'none',
                               padding: '12px 32px',
                               borderRadius: '30px',
                               fontSize: '14px',
                               fontWeight: 600,
-                              cursor: 'pointer',
+                              cursor: isSubmitting ? 'not-allowed' : 'pointer',
                               transition: 'all 0.25s ease',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '8px',
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background = '#111111';
+                              if (!isSubmitting) e.currentTarget.style.background = '#111111';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.background = '#E3872D';
+                              if (!isSubmitting) e.currentTarget.style.background = '#E3872D';
                             }}
                           >
-                            {t('contact.sendMessage')}
+                            <span>{isSubmitting ? (language === 'vi' ? 'Đang gửi...' : 'Sending...') : t('contact.sendMessage')}</span>
                           </button>
                         </div>
                       </form>
