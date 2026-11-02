@@ -20,7 +20,7 @@ const LanguageSelector: React.FC = () => {
   };
 
   return (
-    <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 9999 }}>
+    <div className="language_selector_fixed">
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{

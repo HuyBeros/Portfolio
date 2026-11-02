@@ -118,7 +118,7 @@ function App() {
       <div className="arlo_tm_mobile_header_wrap">
         <div className="main_wrap">
           <div className="logo" style={{ display: 'flex', alignItems: 'center' }}>
-            <a href="#home" style={{ textDecoration: 'none', color: '#111111', fontWeight: 800, fontSize: '18px', fontFamily: '"Montserrat", sans-serif' }}>
+            <a href="#home" style={{ textDecoration: 'none', color: '#ffffff', fontWeight: 800, fontSize: '20px', fontFamily: '"Montserrat", sans-serif', letterSpacing: '0.5px' }}>
               Huy<span style={{ color: '#E3872D' }}>Beros</span>
             </a>
           </div>
@@ -272,7 +272,11 @@ function App() {
                   <div className="content hero">
                     <div className="inner_content">
                       <div className="image_wrap">
-                        <img src="img/hero/img.jpg" alt="Nguyen Quang Huy" />
+                        <img
+                          src="img/hero/img.jpg"
+                          alt="Nguyen Quang Huy"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '100%' }}
+                        />
                       </div>
                       <div className="name_holder">
                         <h3 style={{ textTransform: 'uppercase', letterSpacing: '2px' }}>
@@ -317,6 +321,7 @@ function App() {
                             <div
                               className="inner"
                               data-img-url="img/about/1.jpg"
+                              style={{ backgroundImage: 'url(img/about/1.jpg)' }}
                             ></div>
                           </div>
                           <div className="border layer" data-depth="0.2">
