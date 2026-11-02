@@ -2,17 +2,23 @@ import React, { createContext, useState, useContext } from 'react';
 
 type Language = 'en' | 'vi';
 
-interface Translations {
+export interface Translations {
   menu: {
     home: string;
     about: string;
+    skills: string;
     services: string;
     portfolio: string;
-    news: string;
+    achievements: string;
     contact: string;
   };
   hero: {
     greeting: string;
+    role: string;
+    subGreeting: string;
+    viewProjects: string;
+    contactMe: string;
+    typedStrings: string[];
   };
   about: {
     title: string;
@@ -26,59 +32,134 @@ interface Translations {
     interests: string;
     study: string;
     degree: string;
-    website: string;
+    gpa: string;
     mail: string;
     phone: string;
-    twitter: string;
+    github: string;
+    foreignLanguage: string;
     downloadCV: string;
     sendMessage: string;
     labels: {
       birthday: string;
       age: string;
       city: string;
-      interests: string;
       study: string;
       degree: string;
-      website: string;
+      gpa: string;
       mail: string;
       phone: string;
-      twitter: string;
+      github: string;
+      foreignLanguage: string;
+      interests: string;
       address: string;
       email: string;
     };
   };
   skills: {
     title: string;
+    subtitle: string;
     description: string;
-    wordpress: string;
-    css: string;
-    html: string;
-    afterEffect: string;
-    yearsOfExperience: string;
+    javaTitle: string;
+    javaDesc: string;
+    quarkusSpringTitle: string;
+    quarkusSpringDesc: string;
+    databaseTitle: string;
+    databaseDesc: string;
+    frontendTitle: string;
+    frontendDesc: string;
+    devopsTitle: string;
+    devopsDesc: string;
+    categories: {
+      languages: string;
+      frameworks: string;
+      databases: string;
+      tools: string;
+    };
   };
   services: {
     title: string;
     subtitle: string;
-    photography: string;
-    webDesign: string;
-    branding: string;
-    socialMedia: string;
-    illustrator: string;
-    marketing: string;
-    description: string;
+    backendTitle: string;
+    backendDesc: string;
+    authTitle: string;
+    authDesc: string;
+    databaseTitle: string;
+    databaseDesc: string;
+    paymentTitle: string;
+    paymentDesc: string;
+    devopsTitle: string;
+    devopsDesc: string;
+    frontendTitle: string;
+    frontendDesc: string;
   };
   portfolio: {
     title: string;
     subtitle: string;
     all: string;
-    design: string;
-    photography: string;
-    development: string;
+    fullstack: string;
+    backend: string;
+    project1Tab: string;
+    project2Tab: string;
+    project3Tab: string;
+    project1Title: string;
+    project1Category: string;
+    project1Role: string;
+    project1Timeline: string;
+    project1Desc: string;
+    project1Feat1: string;
+    project1Feat2: string;
+    project1Feat3: string;
+    project1Feat4: string;
+    project2Title: string;
+    project2Category: string;
+    project2Role: string;
+    project2Timeline: string;
+    project2Desc: string;
+    project2Feat1: string;
+    project2Feat2: string;
+    project2Feat3: string;
+    project3Title: string;
+    project3Category: string;
+    project3Role: string;
+    project3Timeline: string;
+    project3Desc: string;
+    project3Feat1: string;
+    project3Feat2: string;
+    project3Feat3: string;
+    githubRepo: string;
+    githubBackend: string;
+    githubFrontend: string;
+    liveDemo: string;
+    keyHighlights: string;
+    techStackLabel: string;
   };
-  news: {
+  achievements: {
     title: string;
     subtitle: string;
-    readMore: string;
+    gpaNumber: string;
+    gpaLabel: string;
+    gpaDesc: string;
+    scholarshipNumber: string;
+    scholarshipLabel: string;
+    scholarshipDesc: string;
+    projectsNumber: string;
+    projectsLabel: string;
+    projectsDesc: string;
+    dedicationNumber: string;
+    dedicationLabel: string;
+    dedicationDesc: string;
+    card1Title: string;
+    card1Subtitle: string;
+    card1Desc: string;
+    card2Title: string;
+    card2Subtitle: string;
+    card2Desc: string;
+    card3Title: string;
+    card3Subtitle: string;
+    card3Desc: string;
+    card4Title: string;
+    card4Subtitle: string;
+    card4Desc: string;
   };
   contact: {
     title: string;
@@ -87,11 +168,13 @@ interface Translations {
     address: string;
     email: string;
     phone: string;
-    website: string;
+    github: string;
     yourName: string;
     yourEmail: string;
+    yourSubject: string;
     yourMessage: string;
     sendMessage: string;
+    directMail: string;
     copyright: string;
     successMessage: string;
     fillRequired: string;
@@ -99,28 +182,22 @@ interface Translations {
       address: string;
       email: string;
       phone: string;
-      website: string;
+      github: string;
     };
-  };
-  counter: {
-    projectsCompleted: string;
-    linesOfCode: string;
-    happyClients: string;
-    awards: string;
   };
 }
 
 const calculateAge = (birthdayString: string): string => {
-  const [day, month, year] = birthdayString.split('.').map(Number);
+  const [day, month, year] = birthdayString.split('/').map(Number);
   const birthDate = new Date(year, month - 1, day);
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
-  
+
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < day)) {
     age--;
   }
-  
+
   return age.toString();
 };
 
@@ -129,220 +206,428 @@ const translations: Record<Language, Translations> = {
     menu: {
       home: 'Home',
       about: 'About',
-      services: 'Services',
-      portfolio: 'Portfolio',
-      news: 'News',
+      skills: 'Skills',
+      services: 'Competencies',
+      portfolio: 'Projects',
+      achievements: 'Achievements',
       contact: 'Contact',
     },
     hero: {
-      greeting: "I'm a",
+      greeting: "Hello, I'm a",
+      role: 'Backend Developer Intern',
+      subGreeting:
+        'Final-year Software Engineering student at Hanoi University of Industry (HaUI), dedicated to building scalable backend systems with Java 21, Quarkus, Spring Boot, and PostgreSQL.',
+      viewProjects: 'View Projects',
+      contactMe: 'Contact Me',
+      typedStrings: [
+        'HaUI Software Engineering Student',
+        'Java Developer',
+        'Full-Stack Developer',
+      ],
     },
     about: {
       title: 'About Me',
-      subtitle: 'Main informations about me',
+      subtitle: 'Introduction and background',
       fullName: 'Nguyen Quang Huy',
-      intro: "I'm Nguyen Quang Huy and",
+      intro: "I'm Nguyen Quang Huy — Backend Developer Intern",
       description:
-        "Hi! My name is Nguyen Quang Huy. I am a Web Developer, and I'm very passionate and dedicated to my work. With 20 years experience as a professional Web developer, I have acquired the skills and knowledge necessary to make your project a success. I enjoy every step of the design process, from discussion and collaboration to concept and execution, but I find the most satisfaction in seeing the finished product do everything for you that it was created to do.",
-      birthday: '18.10.2005',
-      age: calculateAge('18.10.2005'),
-      city: 'Ha Noi, Vietnam',
-      interests: 'Soccer, Music',
-      study: 'Hanoi University Of Industry',
-      degree: 'Bachelor',
-      website: 'www.mywebsite.com',
+        'Final-year Software Engineering student at Hanoi University of Industry (HaUI) with strong passion for backend architecture and building reliable, scalable web applications. Experienced in developing secure RESTful APIs with Java 21, Quarkus, Spring Boot, Hibernate ORM/Panache, and PostgreSQL. Proficient in database modeling, stateless JWT authentication, role-based access control, and integrating payment systems like VNPay. A self-driven learner and proactive team player seeking an environment to sharpen my skills, contribute to real-world projects, and grow as a software engineer.',
+      birthday: '18/10/2005',
+      age: calculateAge('18/10/2005'),
+      city: 'Nam Tu Liem, Ha Noi, Vietnam',
+      study: 'Hanoi University of Industry (HaUI)',
+      degree: 'Software Engineering',
+      gpa: '3.45',
       mail: 'nquanghuycv@gmail.com',
       phone: '0819012251',
-      twitter: '@huyberos',
-      downloadCV: 'Download CV',
+      github: 'github.com/HuyBeros',
+      foreignLanguage: 'English (Able to read technical documentation)',
+      interests: 'Reading, Cooking, Traveling, Technology, Football',
+      downloadCV: 'Download CV (PDF)',
       sendMessage: 'Send Message',
       labels: {
         birthday: 'Birthday',
         age: 'Age',
-        city: 'City',
-        interests: 'Interests',
-        study: 'Study',
-        degree: 'Degree',
-        website: 'Website',
-        mail: 'Mail',
+        city: 'Location',
+        study: 'University',
+        degree: 'Major',
+        gpa: 'Cumulative GPA',
+        mail: 'Email',
         phone: 'Phone',
-        twitter: 'Twitter',
+        github: 'GitHub',
+        foreignLanguage: 'Foreign Language',
+        interests: 'Interests',
         address: 'Address',
         email: 'Email',
       },
     },
     skills: {
-      title: 'Some About my Abilities',
+      title: 'Technical Skills',
+      subtitle: 'Technologies & tools I work with',
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since. Lorem Ipsum has been the industry. Lorem Ipsum has been the industry's standard dummy text since. Lorem Ipsum is simply.",
-      wordpress: 'Wordpress',
-      css: 'Css',
-      html: 'HTML',
-      afterEffect: 'After Effect',
-      yearsOfExperience: 'years of experience',
+        'Solid foundation in Object-Oriented Programming (OOP), Data Structures & Algorithms, modern enterprise Java frameworks (Quarkus, Spring Boot), relational database design & optimization (PostgreSQL, MySQL), containerization with Docker, and responsive React frontend development.',
+      javaTitle: 'Java (Java 21, OOP, Collections, Concurrency, Stream API)',
+      javaDesc: 'Proficient in modern Java features, clean architecture, and design patterns',
+      quarkusSpringTitle: 'Quarkus & Spring Boot (REST APIs, Security, JWT, Panache/JPA)',
+      quarkusSpringDesc: 'Building lightweight, high-performance microservices and RESTful backends',
+      databaseTitle: 'Databases (PostgreSQL, MySQL, Neon Cloud, Schema Design)',
+      databaseDesc: 'Relational data modeling, indexing, transaction management, and query optimization',
+      frontendTitle: 'React & Frontend (JavaScript/TypeScript, Vite, Chart.js)',
+      frontendDesc: 'Developing interactive customer portals and responsive administrative dashboards',
+      devopsTitle: 'DevOps & Tools (Git/GitHub, Docker, Render, Maven)',
+      devopsDesc: 'Containerization, automated build lifecycles, and cloud hosting workflows',
+      categories: {
+        languages: 'Programming Languages',
+        frameworks: 'Frameworks & Libraries',
+        databases: 'Databases & Storage',
+        tools: 'Tools & Deployment',
+      },
     },
     services: {
-      title: 'Amazing Services',
-      subtitle: 'Meet our amazing services',
-      photography: 'Photography',
-      webDesign: 'Web Design',
-      branding: 'Branding',
-      socialMedia: 'Social Media',
-      illustrator: 'Illustrator',
-      marketing: 'Marketing',
-      description:
-        'Web design is a similar process of creation, with the intention of presenting the content on electronic pages ...',
+      title: 'Core Competencies',
+      subtitle: 'Key technical domains & engineering capabilities',
+      backendTitle: 'Backend & RESTful API Architecture',
+      backendDesc:
+        'Designing and implementing robust, clean RESTful APIs using Java 21, Quarkus, and Spring Boot following layered architecture (Controller/Resource, Service, Repository), DTO validation, and centralized exception handling.',
+      authTitle: 'Authentication & Security',
+      authDesc:
+        'Implementing stateless authentication using JSON Web Tokens (JWT), BCrypt password hashing, and granular Role-Based Access Control (RBAC) to protect administrative and customer resources.',
+      databaseTitle: 'Database Design & ORM Optimization',
+      databaseDesc:
+        'Designing relational schemas, establishing foreign key constraints, and managing persistence using Hibernate ORM with Panache and Spring Data JPA on PostgreSQL and MySQL.',
+      paymentTitle: 'Payment Gateway Integration',
+      paymentDesc:
+        'Integrating VNPay Sandbox and Cash-on-Delivery (COD) payment workflows: generating secure transaction URLs, calculating cryptographic checksums, and verifying callback signatures with HMAC-SHA512.',
+      devopsTitle: 'Containerization & Cloud Deployment',
+      devopsDesc:
+        'Writing optimized Dockerfiles for Java multi-stage builds, managing multi-container stacks, and deploying backend applications and managed PostgreSQL databases to Render and Neon Cloud.',
+      frontendTitle: 'Frontend Integration & Analytics',
+      frontendDesc:
+        'Developing responsive client interfaces and interactive admin dashboards using React, Vite, and Chart.js for real-time revenue analytics, order tracking, and product management.',
     },
     portfolio: {
-      title: 'Creative Works',
-      subtitle: 'Check out our latest creative works',
-      all: 'All',
-      design: 'Design',
-      photography: 'Photography',
-      development: 'Development',
+      title: 'Featured Projects',
+      subtitle: 'Full-stack & backend systems built with production-grade architectures',
+      all: 'All Projects',
+      fullstack: 'Full-Stack',
+      backend: 'Backend',
+      project1Tab: 'PhoneZone — E-Commerce',
+      project2Tab: 'PhoneZone — Admin Dashboard',
+      project3Tab: 'Spring Boot REST API',
+      project1Title: 'PhoneZone — E-Commerce & Repair Service Platform',
+      project1Category: 'Full-Stack Web Application',
+      project1Role: 'Fullstack Developer (Backend Focused)',
+      project1Timeline: '04/2026 - 11/2026',
+      project1Desc:
+        'A comprehensive e-commerce platform specializing in mobile phones, tablets, and accessories, featuring online ordering, a customer loyalty reward points system, and device repair appointment booking.',
+      project1Feat1:
+        'Built user registration and authentication with stateless JWT, plus Customer and Admin Role-Based Access Control (RBAC).',
+      project1Feat2:
+        'Integrated VNPay Sandbox & COD: generated payment URLs, signed and verified callback signatures using HMAC-SHA512, and updated order statuses.',
+      project1Feat3:
+        'Developed customer interface (product catalog, device comparison, repair booking) and administrative dashboard with revenue charts via Chart.js.',
+      project1Feat4:
+        'Containerized with Docker, deployed PostgreSQL on Neon Cloud, and hosted on Render with modern CI/CD practices.',
+      project2Title: 'PhoneZone — Admin Dashboard & Revenue Analytics Subsystem',
+      project2Category: 'Management & Analytics Module',
+      project2Role: 'Backend & Dashboard Developer',
+      project2Timeline: '2026',
+      project2Desc:
+        'The specialized administration module of PhoneZone empowering business owners to manage inventory, process customer repair appointments, and track sales performance in real-time.',
+      project2Feat1:
+        'Interactive financial metrics and monthly sales charts powered by Chart.js and RESTful aggregation endpoints.',
+      project2Feat2:
+        'Repair booking management with status workflow transitions (Pending, In Progress, Completed, Cancelled).',
+      project2Feat3:
+        'Comprehensive product inventory and customer account administration with audit trails.',
+      project3Title: 'Enterprise RESTful API & Security Service',
+      project3Category: 'Backend & Microservices Architecture',
+      project3Role: 'Backend Developer',
+      project3Timeline: '2025 - 2026',
+      project3Desc:
+        'High-performance backend RESTful API service built with Java 21 and Spring Boot, secured with Spring Security & stateless JWT, role-based authorization, and optimized queries with Spring Data JPA & MySQL.',
+      project3Feat1:
+        'Designed clean layered architecture (Controller, Service, Repository) with strict DTO validation and centralized exception handling.',
+      project3Feat2:
+        'Configured Spring Security Filter Chain, BCrypt password hashing, and stateless JWT authentication for protected endpoints.',
+      project3Feat3:
+        'Integrated automated interactive OpenAPI / Swagger UI documentation and Docker multi-stage containerization.',
+      githubRepo: 'GitHub Repository',
+      githubBackend: 'GitHub Backend',
+      githubFrontend: 'GitHub Frontend',
+      liveDemo: 'Live Demo',
+      keyHighlights: 'Key Technical Highlights',
+      techStackLabel: 'Tech Stack',
     },
-    news: {
-      title: 'Latest News',
-      subtitle: 'Check out our latest News',
-      readMore: 'Read More',
+    achievements: {
+      title: 'Achievements & Academic Standing',
+      subtitle: 'Academic excellence and university milestones',
+      gpaNumber: '3.45',
+      gpaLabel: 'Cumulative GPA',
+      gpaDesc: 'Ranked Very Good (Giỏi) in Software Engineering at HaUI (Scale 4.0)',
+      scholarshipNumber: '01',
+      scholarshipLabel: 'Academic Scholarship',
+      scholarshipDesc: 'Academic Excellence Scholarship awarded in Semester 6',
+      projectsNumber: '01+',
+      projectsLabel: 'Fullstack System',
+      projectsDesc: 'End-to-end e-commerce platform ready for production deployment',
+      dedicationNumber: '100%',
+      dedicationLabel: 'Dedication & Proactivity',
+      dedicationDesc: 'Passionate about clean code, robust architecture, and rapid learning',
+      card1Title: 'Hanoi University of Industry (HaUI)',
+      card1Subtitle: 'Bachelor of Software Engineering (2023 - Present)',
+      card1Desc:
+        'GPA: 3.45. Solid foundation in Object-Oriented Programming (OOP), Data Structures & Algorithms, Database Systems, Computer Networks, and Software Testing.',
+      card2Title: 'Study Encouragement Scholarship of Excellence',
+      card2Subtitle: 'Very Good Student Title (Academic Year 2025 - 2026)',
+      card2Desc:
+        'Awarded the Study Encouragement Scholarship of Excellence and the title of Very Good Student for the academic year 2025 - 2026 at Hanoi University of Industry (HaUI).',
+      card3Title: 'Continuous Self-Learning & Engineering Agility',
+      card3Subtitle: 'Modern Enterprise Tech Stacks',
+      card3Desc:
+        'Proactively mastered Java 21, Quarkus 3, Spring Boot 3, Docker containerization, REST API security, and cloud deployment on Render and Neon.',
+      card4Title: 'Scientific Research at HaUI',
+      card4Subtitle: 'Mentored by Ph.D. Faculty — HaUI',
+      card4Desc:
+        'Participated in scientific research under the direct guidance of a Ph.D. faculty at Hanoi University of Industry (HaUI), developing independent research thinking, academic analysis, and in-depth system architecture exploration.',
     },
     contact: {
       title: 'Contact Me',
-      subtitle: 'Get in touch with me',
-      getInTouch: 'Get in Touch',
-      address: 'Nam Từ Liêm, Hà Nội, Việt Nam',
+      subtitle: 'Feel free to reach out for opportunities or collaboration',
+      getInTouch: 'Get In Touch',
+      address: 'Nam Tu Liem, Ha Noi, Vietnam',
       email: 'nquanghuycv@gmail.com',
       phone: '0819012251',
-      website: 'www.mywebsite.com',
+      github: 'https://github.com/HuyBeros',
       yourName: 'Your Name',
       yourEmail: 'Your Email',
+      yourSubject: 'Subject',
       yourMessage: 'Your Message',
       sendMessage: 'Send Message',
-      copyright: '© Copyright 2019. All Rights are Reserved.',
-      successMessage: 'Your message has been received, We will contact you soon.',
-      fillRequired: 'Please Fill Required Fields',
+      directMail: 'Open Email Client',
+      copyright: '© 2026 Nguyen Quang Huy. All Rights Reserved.',
+      successMessage: 'Thank you! Your message has been prepared.',
+      fillRequired: 'Please fill in all required fields.',
       labels: {
         address: 'Address',
         email: 'Email',
         phone: 'Phone',
-        website: 'Website',
+        github: 'GitHub',
       },
-    },
-    counter: {
-      projectsCompleted: 'Projects Completed',
-      linesOfCode: 'Lines of Code',
-      happyClients: 'Happy Clients',
-      awards: 'My Awwwards',
     },
   },
   vi: {
     menu: {
       home: 'Trang chủ',
       about: 'Về tôi',
-      services: 'Dịch vụ',
-      portfolio: 'Portfolio',
-      news: 'Tin tức',
+      skills: 'Kỹ năng',
+      services: 'Thế mạnh',
+      portfolio: 'Dự án',
+      achievements: 'Thành tích',
       contact: 'Liên hệ',
     },
     hero: {
-      greeting: 'Tôi là một',
+      greeting: 'Xin chào, tôi là',
+      role: 'Backend Developer Intern',
+      subGreeting:
+        'Sinh viên năm cuối ngành Kỹ thuật phần mềm tại Đại học Công nghiệp Hà Nội (HaUI), định hướng phát triển hệ thống backend hiệu năng cao với Java 21, Quarkus, Spring Boot và PostgreSQL.',
+      viewProjects: 'Xem Dự Án',
+      contactMe: 'Liên Hệ Ngay',
+      typedStrings: [
+        'Sinh viên kỹ thuật phần mềm HaUI',
+        'Lập trình viên Java',
+        'lập trình viên fullstack',
+      ],
     },
     about: {
       title: 'Về Tôi',
-      subtitle: 'Thông tin chính về tôi',
+      subtitle: 'Thông tin giới thiệu bản thân',
       fullName: 'Nguyễn Quang Huy',
-      intro: 'Tôi là Nguyễn Quang Huy và',
+      intro: 'Tôi là Nguyễn Quang Huy — Backend Developer Intern',
       description:
-        'Xin chào! Tên tôi là Nguyễn Quang Huy. Tôi là một Web Developer, và tôi rất đam mê và tập trung vào công việc của mình. Với 20 năm kinh nghiệm làm Web developer chuyên nghiệp, tôi đã có được kỹ năng và kiến thức cần thiết để làm cho dự án của bạn thành công. Tôi thích mỗi bước của quá trình thiết kế, từ thảo luận và hợp tác cho đến khái niệm và thực hiện, nhưng tôi thấy hài lòng nhất khi thấy sản phẩm hoàn chỉnh hoạt động đúng như được tạo ra.',
-      birthday: '18.10.2005',
-      age: calculateAge('18.10.2005'),
-      city: 'Hà Nội, Việt Nam',
-      interests: 'Bóng đá, Âm nhạc',
-      study: 'Đại học công nghiệp Hà Nội',
-      degree: 'Cử nhân',
-      website: 'www.mywebsite.com',
+        'Sinh viên năm cuối ngành Kỹ thuật phần mềm tại Đại học Công nghiệp Hà Nội (HaUI) với niềm đam mê xây dựng các hệ thống Backend vững chắc, bảo mật và có khả năng mở rộng. Tôi có thế mạnh về Java 21, Quarkus, Spring Boot, Hibernate ORM/Panache và PostgreSQL. Tôi đã có kinh nghiệm thực tế trong việc phát triển ứng dụng Fullstack hoàn chỉnh với xác thực JWT, phân quyền tài khoản (RBAC), và tích hợp cổng thanh toán VNPay. Với tinh thần tự học cao và khả năng làm việc nhóm hiệu quả, tôi tìm kiếm cơ hội Thực tập sinh Backend Developer để rèn luyện kỹ năng và đóng góp cho các dự án thực tế.',
+      birthday: '18/10/2005',
+      age: calculateAge('18/10/2005'),
+      city: 'Nam Từ Liêm, Hà Nội, Việt Nam',
+      study: 'Đại học Công nghiệp Hà Nội (HaUI)',
+      degree: 'Kỹ thuật phần mềm',
+      gpa: '3.45',
       mail: 'nquanghuycv@gmail.com',
       phone: '0819012251',
-      twitter: '@huyberos',
-      downloadCV: 'Tải xuống CV',
+      github: 'github.com/HuyBeros',
+      foreignLanguage: 'Tiếng Anh (Đọc hiểu tốt tài liệu kỹ thuật chuyên ngành)',
+      interests: 'Đọc sách, Nấu ăn, Du lịch, Công nghệ, Bóng đá',
+      downloadCV: 'Tải xuống CV (PDF)',
       sendMessage: 'Gửi tin nhắn',
       labels: {
         birthday: 'Ngày sinh',
         age: 'Tuổi',
-        city: 'Thành phố',
-        interests: 'Sở thích',
-        study: 'Trường học',
-        degree: 'Bằng cấp',
-        website: 'Website',
+        city: 'Địa chỉ',
+        study: 'Trường ĐH',
+        degree: 'Chuyên ngành',
+        gpa: 'Điểm trung bình (GPA)',
         mail: 'Email',
         phone: 'Điện thoại',
-        twitter: 'Twitter',
+        github: 'GitHub',
+        foreignLanguage: 'Ngoại ngữ',
+        interests: 'Sở thích',
         address: 'Địa chỉ',
         email: 'Email',
       },
     },
     skills: {
-      title: 'Một số kỹ năng của tôi',
+      title: 'Kỹ Năng Chuyên Môn',
+      subtitle: 'Các công nghệ và công cụ sử dụng',
       description:
-        'Lorem Ipsum là văn bản giả trong ngành in và thiết kế kiểu chữ. Lorem Ipsum vẫn là văn bản giả tiêu chuẩn của ngành kể từ những năm 1500. Lorem Ipsum đã trở thành công nghiệp. Lorem Ipsum là văn bản giả tiêu chuẩn của ngành kể từ những năm đó. Lorem Ipsum rất đơn giản.',
-      wordpress: 'Wordpress',
-      css: 'Css',
-      html: 'HTML',
-      afterEffect: 'After Effect',
-      yearsOfExperience: 'năm kinh nghiệm',
+        'Nắm vững tư duy Lập trình hướng đối tượng (OOP), Cấu trúc dữ liệu & Giải thuật, kiến trúc backend hiện đại với Java (Quarkus, Spring Boot), thiết kế và tối ưu hóa cơ sở dữ liệu quan hệ (PostgreSQL, MySQL), đóng gói Docker và xây dựng giao diện React responsive.',
+      javaTitle: 'Java (Java 21, Core OOP, Collections, Concurrency, Stream API)',
+      javaDesc: 'Thành thạo các tính năng Java hiện đại, tư duy Clean Code và Design Patterns',
+      quarkusSpringTitle: 'Quarkus & Spring Boot (REST APIs, Security, JWT, Panache/JPA)',
+      quarkusSpringDesc: 'Xây dựng RESTful API và microservices nhẹ, tốc độ cao và bảo mật',
+      databaseTitle: 'Cơ sở dữ liệu (PostgreSQL, MySQL, Neon Cloud, Thiết kế Schema)',
+      databaseDesc: 'Mô hình hóa dữ liệu quan hệ, đánh index, tối ưu truy vấn và quản lý giao dịch',
+      frontendTitle: 'React & Frontend (JavaScript/TypeScript, Vite, Chart.js)',
+      frontendDesc: 'Xây dựng giao diện người dùng tương tác và dashboard quản trị trực quan',
+      devopsTitle: 'Công cụ & Triển khai (Git/GitHub, Docker, Render, Maven)',
+      devopsDesc: 'Đóng gói container với Docker, tự động hóa build với Maven và triển khai lên Render',
+      categories: {
+        languages: 'Ngôn ngữ lập trình',
+        frameworks: 'Framework & Thư viện',
+        databases: 'Cơ sở dữ liệu',
+        tools: 'Công cụ & Triển khai',
+      },
     },
     services: {
-      title: 'Dịch vụ tuyệt vời',
-      subtitle: 'Gặp các dịch vụ tuyệt vời của chúng tôi',
-      photography: 'Chụp ảnh',
-      webDesign: 'Thiết kế web',
-      branding: 'Thương hiệu',
-      socialMedia: 'Mạng xã hội',
-      illustrator: 'Minh họa',
-      marketing: 'Marketing',
-      description:
-        'Thiết kế web là một quy trình tạo tương tự, với mục đích trình bày nội dung trên các trang điện tử...',
+      title: 'Thế Mạnh Chuyên Môn',
+      subtitle: 'Các lĩnh vực chuyên môn và năng lực kỹ thuật',
+      backendTitle: 'Phát triển Backend & RESTful API',
+      backendDesc:
+        'Thiết kế và xây dựng RESTful API chuyên nghiệp với Java 21, Quarkus và Spring Boot theo kiến trúc phân tầng (Controller/Resource, Service, Repository), DTO validation và xử lý ngoại lệ tập trung.',
+      authTitle: 'Xác thực & Bảo mật ứng dụng',
+      authDesc:
+        'Triển khai cơ chế xác thực phi trạng thái (stateless) bằng JSON Web Token (JWT), mã hóa mật khẩu với BCrypt và phân quyền vai trò (RBAC) chi tiết cho Khách hàng và Quản trị viên.',
+      databaseTitle: 'Thiết kế CSDL & Tối ưu ORM',
+      databaseDesc:
+        'Thiết kế lược đồ CSDL quan hệ, quan hệ bảng, chỉ mục và tương tác dữ liệu hiệu quả với Hibernate ORM / Panache và Spring Data JPA trên PostgreSQL và MySQL.',
+      paymentTitle: 'Tích hợp Cổng thanh toán',
+      paymentDesc:
+        'Tích hợp quy trình thanh toán VNPay Sandbox và COD: tạo URL thanh toán, tạo chữ ký số và kiểm tra tính toàn vẹn dữ liệu callback bằng thuật toán HMAC-SHA512.',
+      devopsTitle: 'Đóng gói Docker & Triển khai Cloud',
+      devopsDesc:
+        'Viết Dockerfile tối ưu nhiều giai đoạn (multi-stage build), đóng gói và triển khai ứng dụng backend cùng cơ sở dữ liệu PostgreSQL lên nền tảng Render và Neon Cloud.',
+      frontendTitle: 'Tích hợp Frontend & Trực quan dữ liệu',
+      frontendDesc:
+        'Xây dựng giao diện bán hàng và bảng quản trị (Admin Dashboard) với React, Vite và Chart.js phục vụ thống kê doanh thu, quản lý đơn hàng và lịch đặt sửa chữa.',
     },
     portfolio: {
-      title: 'Tác phẩm sáng tạo',
-      subtitle: 'Xem các tác phẩm sáng tạo mới nhất của chúng tôi',
-      all: 'Tất cả',
-      design: 'Thiết kế',
-      photography: 'Chụp ảnh',
-      development: 'Phát triển',
+      title: 'Dự Án Tiêu Biểu',
+      subtitle: 'Hệ thống Fullstack & Backend hoàn thiện với kiến trúc chuẩn mực',
+      all: 'Tất cả dự án',
+      fullstack: 'Full-Stack',
+      backend: 'Backend',
+      project1Tab: 'PhoneZone — E-Commerce',
+      project2Tab: 'PhoneZone — Admin Dashboard',
+      project3Tab: 'Spring Boot REST API',
+      project1Title: 'PhoneZone — Nền tảng TMĐT & Đặt lịch sửa chữa thiết bị',
+      project1Category: 'Ứng dụng Full-Stack',
+      project1Role: 'Fullstack Developer (Trọng tâm Backend)',
+      project1Timeline: '04/2026 - 11/2026',
+      project1Desc:
+        'Nền tảng thương mại điện tử kinh doanh điện thoại, máy tính bảng và phụ kiện, tích hợp đặt hàng trực tuyến, hệ thống tích điểm đổi thưởng và chức năng đặt lịch sửa chữa thiết bị thông minh.',
+      project1Feat1:
+        'Xây dựng chức năng đăng ký, đăng nhập với JWT cùng phân quyền vai trò (Customer/Admin) quản lý sản phẩm, đơn hàng và tài khoản.',
+      project1Feat2:
+        'Tích hợp thanh toán VNPay Sandbox và COD: tạo URL thanh toán, ký và xác thực chữ ký callback với HMAC-SHA512, cập nhật trạng thái đơn hàng tự động.',
+      project1Feat3:
+        'Phát triển giao diện React cho cả khách hàng lẫn admin dashboard, hỗ trợ so sánh sản phẩm, đặt lịch sửa chữa và biểu đồ doanh thu với Chart.js.',
+      project1Feat4:
+        'Đóng gói Docker, kết nối PostgreSQL trên Neon Cloud và triển khai hoàn chỉnh trên Render.',
+      project2Title: 'PhoneZone — Dashboard Quản trị & Thống kê doanh thu',
+      project2Category: 'Module Quản trị & Báo cáo',
+      project2Role: 'Backend & Dashboard Developer',
+      project2Timeline: '2026',
+      project2Desc:
+        'Hệ thống quản trị chuyên sâu của PhoneZone giúp người quản lý theo dõi doanh số, quản lý kho hàng và xử lý quy trình lịch hẹn sửa chữa theo thời gian thực.',
+      project2Feat1:
+        'Trực quan hóa doanh thu theo tháng và danh mục sản phẩm thông qua biểu đồ Chart.js kết hợp API tổng hợp dữ liệu.',
+      project2Feat2:
+        'Quản lý vòng đời lịch đặt sửa chữa (Chờ tiếp nhận, Đang xử lý, Hoàn thành, Hủy lịch).',
+      project2Feat3:
+        'Quản trị kho hàng, danh mục phụ kiện và phân quyền tài khoản người dùng bảo mật.',
+      project3Title: 'Hệ Thống RESTful API & Quản Lý Bảo Mật (Spring Boot)',
+      project3Category: 'Hệ thống Backend & Microservices',
+      project3Role: 'Backend Developer',
+      project3Timeline: '2025 - 2026',
+      project3Desc:
+        'Hệ thống RESTful API backend hiệu năng cao xây dựng với Java 21 và Spring Boot, bảo mật với Spring Security & stateless JWT, phân quyền tài khoản chi tiết và tích hợp tài liệu Swagger/OpenAPI.',
+      project3Feat1:
+        'Thiết kế RESTful API chuẩn phân tầng Controller - Service - Repository với DTO pattern và validation.',
+      project3Feat2:
+        'Cấu hình Spring Security Filter Chain, mã hóa mật khẩu BCrypt và quản lý phiên làm việc stateless với JWT.',
+      project3Feat3:
+        'Tích hợp tài liệu API tương tác tự động với Swagger / OpenAPI UI và đóng gói container Docker.',
+      githubRepo: 'Mã nguồn GitHub',
+      githubBackend: 'GitHub Backend',
+      githubFrontend: 'GitHub Frontend',
+      liveDemo: 'Trải nghiệm Live',
+      keyHighlights: 'Điểm nổi bật về kỹ thuật',
+      techStackLabel: 'Công nghệ',
     },
-    news: {
-      title: 'Tin tức mới nhất',
-      subtitle: 'Xem tin tức mới nhất của chúng tôi',
-      readMore: 'Đọc thêm',
+    achievements: {
+      title: 'Thành Tích & Học Vấn',
+      subtitle: 'Kết quả học tập xuất sắc và các cột mốc nổi bật',
+      gpaNumber: '3.45',
+      gpaLabel: 'GPA Tích Lũy',
+      gpaDesc: 'Xếp loại Giỏi ngành Kỹ thuật phần mềm tại HaUI (Thang điểm 4.0)',
+      scholarshipNumber: '01',
+      scholarshipLabel: 'Học Bổng Khuyến Khích',
+      scholarshipDesc: 'Học bổng khuyến khích học tập đạt được trong Kỳ 6',
+      projectsNumber: '01+',
+      projectsLabel: 'Dự Án Fullstack Hoàn Chỉnh',
+      projectsDesc: 'Hệ thống thương mại điện tử & dịch vụ sẵn sàng chạy thực tế',
+      dedicationNumber: '100%',
+      dedicationLabel: 'Nhiệt Huyết & Chủ Động',
+      dedicationDesc: 'Đam mê Clean Code, kiến trúc chuẩn và khả năng tự nghiên cứu công nghệ mới',
+      card1Title: 'Đại học Công nghiệp Hà Nội (HaUI)',
+      card1Subtitle: 'Cử nhân Kỹ thuật phần mềm (2023 - Hiện tại)',
+      card1Desc:
+        'GPA: 3.45. Nắm vững kiến thức nền tảng: Lập trình hướng đối tượng (OOP), Cấu trúc dữ liệu & Giải thuật, Hệ quản trị CSDL, Mạng máy tính và Kiến trúc phần mềm.',
+      card2Title: 'Học bổng Khuyến khích học tập loại Xuất sắc',
+      card2Subtitle: 'Danh hiệu Sinh viên loại Giỏi năm học 2025 - 2026',
+      card2Desc:
+        'Học bổng khuyến khích học tập loại xuất sắc và đạt danh hiệu sinh viên loại giỏi năm học 2025 - 2026 tại Trường Đại học Công nghiệp Hà Nội (HaUI).',
+      card3Title: 'Tinh thần Tự học & Tiếp cận Công nghệ mới',
+      card3Subtitle: 'Hệ sinh thái Java & Cloud-Native hiện đại',
+      card3Desc:
+        'Chủ động nghiên cứu và áp dụng Java 21, Quarkus 3, Spring Boot 3, Docker containerization, RESTful API và triển khai ứng dụng lên Render & Neon Cloud.',
+      card4Title: 'Nghiên Cứu Khoa Học tại HaUI',
+      card4Subtitle: 'Trường Đại học Công nghiệp Hà Nội (HaUI)',
+      card4Desc:
+        'Tham gia nghiên cứu khoa học dưới sự hướng dẫn trực tiếp của Tiến sĩ tại trường Đại học Công nghiệp Hà Nội (HaUI), phát triển tư duy nghiên cứu độc lập, phân tích học thuật và tiếp cận kiến trúc hệ thống chuyên sâu.',
     },
     contact: {
-      title: 'Liên hệ tôi',
-      subtitle: 'Liên hệ với tôi',
-      getInTouch: 'Liên hệ',
+      title: 'Liên Hệ Với Tôi',
+      subtitle: 'Sẵn sàng trao đổi về cơ hội Thực tập sinh / Fresher Backend Developer',
+      getInTouch: 'Thông Tin Liên Hệ',
       address: 'Nam Từ Liêm, Hà Nội, Việt Nam',
       email: 'nquanghuycv@gmail.com',
       phone: '0819012251',
-      website: 'www.mywebsite.com',
-      yourName: 'Tên của bạn',
+      github: 'https://github.com/HuyBeros',
+      yourName: 'Họ và tên của bạn',
       yourEmail: 'Email của bạn',
-      yourMessage: 'Tin nhắn của bạn',
-      sendMessage: 'Gửi tin nhắn',
-      copyright: '© Bản quyền 2019. Tất cả các quyền được bảo lưu.',
-      successMessage: 'Tin nhắn của bạn đã được nhận, chúng tôi sẽ liên hệ với bạn sớm.',
-      fillRequired: 'Vui lòng điền các trường bắt buộc',
+      yourSubject: 'Tiêu đề',
+      yourMessage: 'Nội dung tin nhắn',
+      sendMessage: 'Gửi Tin Nhắn',
+      directMail: 'Gửi Email Trực Tiếp',
+      copyright: '© 2026 Nguyễn Quang Huy. All Rights Reserved.',
+      successMessage: 'Cảm ơn bạn! Thông tin đã sẵn sàng để gửi đi.',
+      fillRequired: 'Vui lòng điền đầy đủ các thông tin bắt buộc.',
       labels: {
         address: 'Địa chỉ',
         email: 'Email',
         phone: 'Điện thoại',
-        website: 'Website',
+        github: 'GitHub',
       },
-    },
-    counter: {
-      projectsCompleted: 'Dự án hoàn thành',
-      linesOfCode: 'Dòng mã',
-      happyClients: 'Khách hàng hài lòng',
-      awards: 'Giải thưởng của tôi',
     },
   },
 };
@@ -355,39 +640,37 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    const saved = localStorage.getItem('language') as Language;
-    return saved && (saved === 'en' || saved === 'vi') ? saved : 'en';
-  });
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [language, setLanguage] = useState<Language>('vi');
 
   const t = (key: string): string => {
     const keys = key.split('.');
     let value: any = translations[language];
 
     for (const k of keys) {
-      value = value?.[k];
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k];
+      } else {
+        return key;
+      }
     }
 
-    return value || key;
-  };
-
-  const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
-    localStorage.setItem('language', lang);
+    return typeof value === 'string' ? value : key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
-}
+};
 
-export function useLanguage() {
+export const useLanguage = () => {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within LanguageProvider');
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
-}
+};

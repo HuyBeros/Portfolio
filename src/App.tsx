@@ -1,50 +1,125 @@
 /** @format */
 
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from './LanguageContext';
 import LanguageSelector from './LanguageSelector';
+import {
+  JavaIcon,
+  SqlIcon,
+  JsIcon,
+  PythonIcon,
+  CsharpIcon,
+  QuarkusIcon,
+  SpringBootIcon,
+  RestApiIcon,
+  SecurityIcon,
+  JwtIcon,
+  HibernateIcon,
+  ReactIcon,
+  PostgresIcon,
+  MysqlIcon,
+  NeonIcon,
+  GitIcon,
+  GitHubIcon,
+  DockerIcon,
+  MavenIcon,
+  ViteIcon,
+  RenderIcon,
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  GitHubSocialIcon,
+} from './techIcons';
+import { ProjectSlider } from './ProjectSlider';
 
 function App() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, t } = useLanguage();
+
+  // Re-trigger typing animation dynamically based on selected language
+  useEffect(() => {
+    const viStrings = [
+      'Sinh viên kỹ thuật phần mềm HaUI',
+      'Lập trình viên Java',
+      'lập trình viên fullstack',
+    ];
+    const enStrings = [
+      'HaUI Software Engineering Student',
+      'Java Developer',
+      'Full-Stack Developer',
+    ];
+    const strings = language === 'vi' ? viStrings : enStrings;
+
+    const timer = setTimeout(() => {
+      const win = window as any;
+      if (typeof win.arlo_tm_animate_text === 'function') {
+        win.arlo_tm_animate_text(strings);
+      } else if (win.jQuery) {
+        const $span = win.jQuery('.arlo_tm_animation_text_word');
+        if ($span.length) {
+          win.jQuery('.typed-cursor').remove();
+          $span.empty();
+          $span.typed({
+            strings: strings,
+            loop: true,
+            startDelay: 300,
+            backDelay: 2000,
+            typeSpeed: 40,
+            backSpeed: 30,
+          });
+        }
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [language]);
+
+  // Contact form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setFormError(t('contact.fillRequired'));
+      return;
+    }
+
+    setFormError('');
+    setFormSubmitted(true);
+
+    const subject = encodeURIComponent(
+      formData.subject.trim() || `Portfolio Contact from ${formData.name}`
+    );
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    window.open(`mailto:nquanghuycv@gmail.com?subject=${subject}&body=${body}`, '_blank');
+  };
 
   return (
-    // <!-- WRAPPER ALL -->
     <div className="arlo_tm_wrapper_all">
       {/* Language Selector - Top Right Corner */}
-      <div
-        style={{
-          position: 'fixed',
-          top: '20px',
-          right: '20px',
-          zIndex: 9999,
-          width: '200px',
-        }}
-      >
-        <LanguageSelector />
-      </div>
-
-      <div id="arlo_tm_popup_blog">
-        <div className="container">
-          <div className="inner_popup scrollable"></div>
-        </div>
-        <span className="close">
-          <a href="#"></a>
-        </span>
-      </div>
-
-      {/* <!-- PRELOADER --> */}
-      {/* <div className="arlo_tm_preloader">
-        <div className="spinner_wrap">
-          <div className="spinner"></div>
-        </div>
-      </div> */}
-      {/* <!-- /PRELOADER --> */}
+      <LanguageSelector />
 
       {/* <!-- MOBILE MENU --> */}
       <div className="arlo_tm_mobile_header_wrap">
         <div className="main_wrap">
-          <div className="logo">
-            <a href="index.html">
-              <img src="img/logo/mobile_logo.png" alt="mobile_logo" />
+          <div className="logo" style={{ display: 'flex', alignItems: 'center' }}>
+            <a href="#home" style={{ textDecoration: 'none', color: '#111111', fontWeight: 800, fontSize: '18px', fontFamily: '"Montserrat", sans-serif' }}>
+              Huy<span style={{ color: '#E3872D' }}>Beros</span>
             </a>
           </div>
           <div className="arlo_tm_trigger">
@@ -65,13 +140,16 @@ function App() {
                 <a href="#about">{t('menu.about')}</a>
               </li>
               <li>
+                <a href="#skills">{t('menu.skills')}</a>
+              </li>
+              <li>
                 <a href="#services">{t('menu.services')}</a>
               </li>
               <li>
                 <a href="#portfolio">{t('menu.portfolio')}</a>
               </li>
               <li>
-                <a href="#news">{t('menu.news')}</a>
+                <a href="#achievements">{t('menu.achievements')}</a>
               </li>
               <li>
                 <a href="#contact">{t('menu.contact')}</a>
@@ -87,10 +165,13 @@ function App() {
         {/* <!-- LEFTPART --> */}
         <div className="arlo_tm_leftpart_wrap">
           <div className="leftpart_inner">
-            <div className="logo_wrap">
-              <a href="#">
-                <img src="img/logo/desktop-logo.png" alt="desktop-logo" />
+            <div className="logo_wrap" style={{ padding: '34px 20px 24px', textAlign: 'center' }}>
+              <a href="#home" style={{ textDecoration: 'none', color: '#ffffff', fontWeight: 800, fontSize: '23px', letterSpacing: '0.5px', fontFamily: '"Montserrat", sans-serif' }}>
+                Huy<span style={{ color: '#E3872D' }}>Beros</span>
               </a>
+              <p style={{ color: '#94a3b8', fontSize: '12px', marginTop: '6px', textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 600 }}>
+                Java Developer
+              </p>
             </div>
             <div className="menu_list_wrap">
               <ul className="anchor_nav">
@@ -101,13 +182,16 @@ function App() {
                   <a href="#about">{t('menu.about')}</a>
                 </li>
                 <li>
+                  <a href="#skills">{t('menu.skills')}</a>
+                </li>
+                <li>
                   <a href="#services">{t('menu.services')}</a>
                 </li>
                 <li>
                   <a href="#portfolio">{t('menu.portfolio')}</a>
                 </li>
                 <li>
-                  <a href="#news">{t('menu.news')}</a>
+                  <a href="#achievements">{t('menu.achievements')}</a>
                 </li>
                 <li>
                   <a href="#contact">{t('menu.contact')}</a>
@@ -116,30 +200,49 @@ function App() {
             </div>
             <div className="leftpart_bottom">
               <div className="social_wrap">
-                <ul>
+                <ul style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: 0, padding: 0 }}>
                   <li>
-                    <a href="#">
-                      <i className="xcon-facebook"></i>
+                    <a
+                      href="https://www.facebook.com/nquanghuy05"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Facebook: nquanghuy05"
+                      style={{ color: '#ffffff', display: 'flex', alignItems: 'center' }}
+                    >
+                      <FacebookIcon />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
-                      <i className="xcon-twitter"></i>
+                    <a
+                      href="https://www.instagram.com/huyberos/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Instagram: @huyberos"
+                      style={{ color: '#ffffff', display: 'flex', alignItems: 'center' }}
+                    >
+                      <InstagramIcon />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
-                      <i className="xcon-linkedin"></i>
+                    <a
+                      href="https://www.linkedin.com/in/huyberos/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="LinkedIn: huyberos"
+                      style={{ color: '#ffffff', display: 'flex', alignItems: 'center' }}
+                    >
+                      <LinkedInIcon />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
-                      <i className="xcon-instagram"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i className="xcon-behance"></i>
+                    <a
+                      href="https://github.com/HuyBeros"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="GitHub: HuyBeros"
+                      style={{ color: '#ffffff', display: 'flex', alignItems: 'center' }}
+                    >
+                      <GitHubSocialIcon />
                     </a>
                   </li>
                 </ul>
@@ -155,6 +258,7 @@ function App() {
         {/* <!-- RIGHTPART --> */}
         <div className="arlo_tm_rightpart">
           <div className="rightpart_inner">
+            {/* <!-- 1. HERO SECTION --> */}
             <div className="arlo_tm_section" id="home">
               <div className="arlo_tm_hero_header_wrap">
                 <div className="arlo_tm_universal_box_wrap">
@@ -168,16 +272,16 @@ function App() {
                   <div className="content hero">
                     <div className="inner_content">
                       <div className="image_wrap">
-                        <img src="img/hero/img.jpg" alt="hero" />
+                        <img src="img/hero/img.jpg" alt="Nguyen Quang Huy" />
                       </div>
                       <div className="name_holder">
-                        <h3>
-                          {t('about.fullName').split(' ')[0]} <span>{t('about.fullName').split(' ').slice(1).join(' ')}</span>
+                        <h3 style={{ textTransform: 'uppercase', letterSpacing: '2px' }}>
+                          NGUYỄN <span style={{ color: '#E3872D' }}>QUANG HUY</span>
                         </h3>
                       </div>
                       <div className="text_typing">
                         <p>
-                          {t('hero.greeting')}{" "}
+                          {t('hero.greeting')}{' '}
                           <span className="arlo_tm_animation_text_word"></span>
                         </p>
                       </div>
@@ -191,8 +295,9 @@ function App() {
                 </div>
               </div>
             </div>
+            {/* <!-- /HERO SECTION --> */}
 
-            {/* <!-- ABOUT --> */}
+            {/* <!-- 2. ABOUT SECTION --> */}
             <div className="arlo_tm_section relative" id="about">
               <div className="arlo_tm_about_wrapper_all">
                 <div className="container">
@@ -208,86 +313,93 @@ function App() {
                           data-relative-input="true"
                         >
                           <div className="image layer" data-depth="0.1">
-                            <img src="img/about/550x640.jpg" alt="550x640" />
+                            <img src="img/about/550x640.jpg" alt="Nguyen Quang Huy" />
                             <div
                               className="inner"
                               data-img-url="img/about/1.jpg"
                             ></div>
                           </div>
                           <div className="border layer" data-depth="0.2">
-                            <img src="img/about/550x640.jpg" alt="550x640" />
+                            <img src="img/about/550x640.jpg" alt="border" />
                             <div className="inner"></div>
                           </div>
                         </div>
                       </div>
                       <div className="rightbox">
                         <div className="arlo_tm_mini_title_holder">
-                          <h4>
-                            {t('about.intro')}{" "}
-                            <span className="arlo_tm_animation_text_word"></span>
-                          </h4>
+                          <h4>{t('about.intro')}</h4>
                         </div>
                         <div className="definition">
-                          <p>
-                            Hi! My name is <strong>{t('about.fullName')}</strong>. {t('about.description')}
-                          </p>
+                          <p>{t('about.description')}</p>
                         </div>
                         <div className="about_short_contact_wrap">
                           <ul>
                             <li>
                               <span>
-                                <label>{t('about.labels.birthday')}:</label> {t('about.birthday')}
+                                <label>{t('about.labels.study')}:</label>{' '}
+                                {t('about.study')}
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.age')}:</label> {t('about.age')}
+                                <label>{t('about.labels.degree')}:</label>{' '}
+                                {t('about.degree')}
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.city')}:</label> {t('about.city')}
+                                <label>{t('about.labels.gpa')}:</label>{' '}
+                                <strong style={{ color: '#E3872D' }}>{t('about.gpa')}</strong>
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.interests')}:</label> {t('about.interests')}
+                                <label>{t('about.labels.city')}:</label>{' '}
+                                {t('about.city')}
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.study')}:</label> {t('about.study')}
+                                <label>{t('about.labels.birthday')}:</label>{' '}
+                                {t('about.birthday')} ({t('about.age')} {t('about.labels.age').toLowerCase()})
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.degree')}:</label> {t('about.degree')}
-                              </span>
-                            </li>
-                            <li>
-                              <span>
-                                <label>{t('about.labels.website')}:</label>{" "}
-                                <a href="#">{t('about.website')}</a>
-                              </span>
-                            </li>
-                            <li>
-                              <span>
-                                <label>{t('about.labels.mail')}:</label>{" "}
-                                <a href="mailto:example@gmail.com">
+                                <label>{t('about.labels.mail')}:</label>{' '}
+                                <a href="mailto:nquanghuycv@gmail.com">
                                   {t('about.mail')}
                                 </a>
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.phone')}:</label>{" "}
-                                <a href="#">{t('about.phone')}</a>
+                                <label>{t('about.labels.phone')}:</label>{' '}
+                                <a href="tel:0819012251">{t('about.phone')}</a>
                               </span>
                             </li>
                             <li>
                               <span>
-                                <label>{t('about.labels.twitter')}:</label>{" "}
-                                <a href="#">{t('about.twitter')}</a>
+                                <label>{t('about.labels.github')}:</label>{' '}
+                                <a
+                                  href="https://github.com/HuyBeros"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {t('about.github')}
+                                </a>
+                              </span>
+                            </li>
+                            <li>
+                              <span>
+                                <label>{t('about.labels.foreignLanguage')}:</label>{' '}
+                                {t('about.foreignLanguage')}
+                              </span>
+                            </li>
+                            <li>
+                              <span>
+                                <label>{t('about.labels.interests')}:</label>{' '}
+                                {t('about.interests')}
                               </span>
                             </li>
                           </ul>
@@ -295,7 +407,12 @@ function App() {
                         <div className="buttons_wrap">
                           <ul>
                             <li>
-                              <a href="index.html">
+                              <a
+                                href="/cv.pdf"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download="CV_Nguyen_Quang_Huy_Backend_Intern.pdf"
+                              >
                                 <span>{t('about.downloadCV')}</span>
                               </a>
                             </li>
@@ -312,109 +429,155 @@ function App() {
                 </div>
               </div>
             </div>
-            {/* <!-- /ABOUT --> */}
+            {/* <!-- /ABOUT SECTION --> */}
 
-            {/* <!-- SKILLS --> */}
-            <div className="arlo_tm_section">
-              <div className="arlo_tm_skills_wrap">
+            {/* <!-- 3. SKILLS SECTION (2 Ô 1 DÒNG VỚI ICON & LOGO TRỰC QUAN) --> */}
+            <div className="arlo_tm_section" id="skills">
+              <div className="arlo_tm_skills_wrap" style={{ padding: '90px 0' }}>
                 <div className="container">
-                  <div className="inner_wrap">
-                    <div className="leftbox">
-                      <div className="arlo_tm_mini_title_holder">
-                        <h4>{t('skills.title')}</h4>
+                  <div className="arlo_tm_title_holder">
+                    <h3>{t('skills.title')}</h3>
+                    <span>{t('skills.subtitle')}</span>
+                  </div>
+
+                  <p style={{ maxWidth: '850px', fontSize: '15px', color: '#666666', lineHeight: '1.7', marginBottom: '25px' }}>
+                    {t('skills.description')}
+                  </p>
+
+                  {/* 2x2 GRID: 2 Ô 1 DÒNG */}
+                  <div className="skills_grid_2x2">
+                    {/* BOX 1: NGÔN NGỮ LẬP TRÌNH */}
+                    <div className="skill_category_card">
+                      <div className="skill_category_header">
+                        <div className="skill_category_icon">
+                          <i className="xcon-laptop" style={{ fontSize: '18px' }}></i>
+                        </div>
+                        <h4>{t('skills.categories.languages')}</h4>
                       </div>
-                      <p>
-                        {t('skills.description')}
-                      </p>
+                      <div className="tech_items_container">
+                        <div className="tech_item_badge">
+                          <JavaIcon />
+                          <span>Java (Java 21)</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <SqlIcon />
+                          <span>SQL</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <JsIcon />
+                          <span>JavaScript</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <PythonIcon />
+                          <span>Python</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <CsharpIcon />
+                          <span>C#</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="rightbox">
-                      <div className="progress_bar_wrap_total">
-                        <div
-                          className="arlo_tm_progress_wrap"
-                          data-size="small"
-                          data-round="c"
-                          data-strip="off"
-                        >
-                          <div
-                            className="arlo_tm_progress"
-                            data-value="95"
-                            data-color="#000"
-                          >
-                            <span>
-                              <span className="label">
-                                Wordpress -{" "}
-                                <span className="experience">
-                                  5 years of experience
-                                </span>
-                              </span>
-                              <span className="number">95%</span>
-                            </span>
-                            <div className="arlo_tm_bar_bg">
-                              <div className="arlo_tm_bar_wrap">
-                                <div className="arlo_tm_bar"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className="arlo_tm_progress"
-                            data-value="85"
-                            data-color="#000"
-                          >
-                            <span>
-                              <span className="label">
-                                Css -{" "}
-                                <span className="experience">
-                                  3 years of experience
-                                </span>
-                              </span>
-                              <span className="number">85%</span>
-                            </span>
-                            <div className="arlo_tm_bar_bg">
-                              <div className="arlo_tm_bar_wrap">
-                                <div className="arlo_tm_bar"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className="arlo_tm_progress"
-                            data-value="75"
-                            data-color="#000"
-                          >
-                            <span>
-                              <span className="label">
-                                HTML -{" "}
-                                <span className="experience">
-                                  4 years of experience
-                                </span>
-                              </span>
-                              <span className="number">75%</span>
-                            </span>
-                            <div className="arlo_tm_bar_bg">
-                              <div className="arlo_tm_bar_wrap">
-                                <div className="arlo_tm_bar"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className="arlo_tm_progress"
-                            data-value="90"
-                            data-color="#000"
-                          >
-                            <span>
-                              <span className="label">
-                                After Effect -{" "}
-                                <span className="experience">
-                                  6 years of experience
-                                </span>
-                              </span>
-                              <span className="number">90%</span>
-                            </span>
-                            <div className="arlo_tm_bar_bg">
-                              <div className="arlo_tm_bar_wrap">
-                                <div className="arlo_tm_bar"></div>
-                              </div>
-                            </div>
-                          </div>
+
+                    {/* BOX 2: FRAMEWORK & THƯ VIỆN */}
+                    <div className="skill_category_card">
+                      <div className="skill_category_header">
+                        <div className="skill_category_icon">
+                          <i className="xcon-cog" style={{ fontSize: '18px' }}></i>
+                        </div>
+                        <h4>{t('skills.categories.frameworks')}</h4>
+                      </div>
+                      <div className="tech_items_container">
+                        <div className="tech_item_badge">
+                          <QuarkusIcon />
+                          <span>Quarkus</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <SpringBootIcon />
+                          <span>Spring Boot</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <RestApiIcon />
+                          <span>RESTful API</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <SecurityIcon />
+                          <span>Spring Security</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <JwtIcon />
+                          <span>JWT Auth</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <HibernateIcon />
+                          <span>Hibernate / Panache</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <SpringBootIcon />
+                          <span>Spring Data JPA</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <ReactIcon />
+                          <span>React</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* BOX 3: CƠ SỞ DỮ LIỆU */}
+                    <div className="skill_category_card">
+                      <div className="skill_category_header">
+                        <div className="skill_category_icon">
+                          <i className="xcon-folder-open-empty" style={{ fontSize: '18px' }}></i>
+                        </div>
+                        <h4>{t('skills.categories.databases')}</h4>
+                      </div>
+                      <div className="tech_items_container">
+                        <div className="tech_item_badge">
+                          <PostgresIcon />
+                          <span>PostgreSQL</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <MysqlIcon />
+                          <span>MySQL</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <NeonIcon />
+                          <span>Neon Cloud</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* BOX 4: CÔNG CỤ & TRIỂN KHAI */}
+                    <div className="skill_category_card">
+                      <div className="skill_category_header">
+                        <div className="skill_category_icon">
+                          <i className="xcon-upload" style={{ fontSize: '18px' }}></i>
+                        </div>
+                        <h4>{t('skills.categories.tools')}</h4>
+                      </div>
+                      <div className="tech_items_container">
+                        <div className="tech_item_badge">
+                          <GitIcon />
+                          <span>Git</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <GitHubIcon />
+                          <span>GitHub</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <DockerIcon />
+                          <span>Docker</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <MavenIcon />
+                          <span>Maven</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <ViteIcon />
+                          <span>Vite</span>
+                        </div>
+                        <div className="tech_item_badge">
+                          <RenderIcon />
+                          <span>Render</span>
                         </div>
                       </div>
                     </div>
@@ -422,855 +585,226 @@ function App() {
                 </div>
               </div>
             </div>
-            {/* <!-- /SKILLS --> */}
+            {/* <!-- /SKILLS SECTION --> */}
 
-            {/* <!-- SERVICES --> */}
+            {/* <!-- 4. CORE COMPETENCIES SECTION (CSS GRID 3 CỘT RESPONSIVE CHUẨN) --> */}
             <div className="arlo_tm_section" id="services">
-              <div className="arlo_tm_services_wrap">
+              <div className="arlo_tm_services_wrap" style={{ padding: '90px 0' }}>
                 <div className="container">
                   <div className="arlo_tm_title_holder">
                     <h3>{t('services.title')}</h3>
                     <span>{t('services.subtitle')}</span>
                   </div>
-                  <div className="list_wrap">
-                    <ul>
-                      <li>
-                        <div className="inner">
-                          <div className="icon">
-                            <img
-                              className="svg"
-                              src="img/svg/camera-diaphragm.svg"
-                              alt="camera-diaphragm"
-                            />
-                          </div>
-                          <div className="title_service">
-                            <h3>Photography</h3>
-                          </div>
-                          <div className="text">
-                            <p>
-                              Web design is a similar process of creation, with
-                              the intention of presenting the content on
-                              electronic pages ...
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="inner">
-                          <div className="icon">
-                            <img
-                              className="svg"
-                              src="img/svg/new-tab.svg"
-                              alt="new-tab"
-                            />
-                          </div>
-                          <div className="title_service">
-                            <h3>Web Design</h3>
-                          </div>
-                          <div className="text">
-                            <p>
-                              Web design is a similar process of creation, with
-                              the intention of presenting the content on
-                              electronic pages ...
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="inner">
-                          <div className="icon">
-                            <img
-                              className="svg"
-                              src="img/svg/layers.svg"
-                              alt="layers"
-                            />
-                          </div>
-                          <div className="title_service">
-                            <h3>Branding</h3>
-                          </div>
-                          <div className="text">
-                            <p>
-                              Web design is a similar process of creation, with
-                              the intention of presenting the content on
-                              electronic pages ...
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="inner">
-                          <div className="icon">
-                            <img
-                              className="svg"
-                              src="img/svg/share.svg"
-                              alt="share"
-                            />
-                          </div>
-                          <div className="title_service">
-                            <h3>Social Media</h3>
-                          </div>
-                          <div className="text">
-                            <p>
-                              Web design is a similar process of creation, with
-                              the intention of presenting the content on
-                              electronic pages ...
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="inner">
-                          <div className="icon">
-                            <img
-                              className="svg"
-                              src="img/svg/adobe-illustrator.svg"
-                              alt="adobe-illustrator"
-                            />
-                          </div>
-                          <div className="title_service">
-                            <h3>Illustrator</h3>
-                          </div>
-                          <div className="text">
-                            <p>
-                              Web design is a similar process of creation, with
-                              the intention of presenting the content on
-                              electronic pages ...
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="inner">
-                          <div className="icon">
-                            <img
-                              className="svg"
-                              src="img/svg/seo-performance-marketing-graphic.svg"
-                              alt="seo-performance-marketing-graphic"
-                            />
-                          </div>
-                          <div className="title_service">
-                            <h3>Marketing</h3>
-                          </div>
-                          <div className="text">
-                            <p>
-                              Web design is a similar process of creation, with
-                              the intention of presenting the content on
-                              electronic pages ...
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <!-- /SERVICES --> */}
 
-            {/* <!-- PORTFOLIO --> */}
-            <div className="arlo_tm_section relative" id="portfolio">
-              <div className="arlo_tm_portfolio_wrapper_all">
-                {/* <!-- PORTFOLIO FILTER --> */}
-                <div className="arlo_tm_second_portfolio">
-                  <div className="container">
-                    <div className="arlo_tm_portfolio_wrap">
-                      <div className="arlo_tm_title_holder portfolio">
-                        <h3>{t('portfolio.title')}</h3>
-                        <span>{t('portfolio.subtitle')}</span>
-                      </div>
-                      <div className="arlo_tm_portfolio_titles"></div>
-                      <ul className="arlo_tm_portfolio_filter">
-                        <li>
-                          <a href="#" className="current" data-filter="*">
-                            {t('portfolio.all')}
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" data-filter=".design">
-                            {t('portfolio.design')}
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" data-filter=".photography">
-                            {t('portfolio.photography')}
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" data-filter=".development">
-                            {t('portfolio.development')}
-                          </a>
-                        </li>
-                      </ul>
-                      <ul className="arlo_tm_portfolio_list gallery_zoom">
-                        <li className="design">
-                          <div
-                            className="entry arlo_tm_portfolio_animation_wrap"
-                            data-title="Aoc Productions"
-                            data-category="Design"
-                          >
-                            <a href="portfolio-single.html">
-                              <img
-                                src="img/portfolio/600x600.jpg"
-                                alt="600x600"
-                              />
-                              <div
-                                className="arlo_tm_portfolio_image_main"
-                                data-img-url="img/portfolio/1.jpg"
-                              ></div>
-                            </a>
-                          </div>
-                        </li>
-                        <li className="photography">
-                          <div
-                            className="entry arlo_tm_portfolio_animation_wrap"
-                            data-title="Ind Hed"
-                            data-category="Photography"
-                          >
-                            <a href="portfolio-single-2.html">
-                              <img
-                                src="img/portfolio/600x600.jpg"
-                                alt="600x600"
-                              />
-                              <div
-                                className="arlo_tm_portfolio_image_main"
-                                data-img-url="img/portfolio/2.jpg"
-                              ></div>
-                            </a>
-                          </div>
-                        </li>
-                        <li className="development">
-                          <div
-                            className="entry arlo_tm_portfolio_animation_wrap"
-                            data-title="Paper Mockup"
-                            data-category="Development"
-                          >
-                            <a href="portfolio-single-3.html">
-                              <img
-                                src="img/portfolio/600x600.jpg"
-                                alt="600x600"
-                              />
-                              <div
-                                className="arlo_tm_portfolio_image_main"
-                                data-img-url="img/portfolio/3.jpg"
-                              ></div>
-                            </a>
-                          </div>
-                        </li>
-                        <li className="photography">
-                          <div
-                            className="entry arlo_tm_portfolio_animation_wrap"
-                            data-title="The Nordic"
-                            data-category="Photography"
-                          >
-                            <a href="portfolio-single-4.html">
-                              <img
-                                src="img/portfolio/600x600.jpg"
-                                alt="600x600"
-                              />
-                              <div
-                                className="arlo_tm_portfolio_image_main"
-                                data-img-url="img/portfolio/4.jpg"
-                              ></div>
-                            </a>
-                          </div>
-                        </li>
-                        <li className="design">
-                          <div
-                            className="entry arlo_tm_portfolio_animation_wrap"
-                            data-title="Creatives Castle"
-                            data-category="Design"
-                          >
-                            <a href="portfolio-single-5.html">
-                              <img
-                                src="img/portfolio/600x600.jpg"
-                                alt="600x600"
-                              />
-                              <div
-                                className="arlo_tm_portfolio_image_main"
-                                data-img-url="img/portfolio/5.jpg"
-                              ></div>
-                            </a>
-                          </div>
-                        </li>
-                        <li className="photography">
-                          <div
-                            className="entry arlo_tm_portfolio_animation_wrap"
-                            data-title="White Bag"
-                            data-category="Photography"
-                          >
-                            <a href="portfolio-single-6.html">
-                              <img src="img/portfolio/600x600.jpg" alt="" />
-                              <div
-                                className="arlo_tm_portfolio_image_main"
-                                data-img-url="img/portfolio/6.jpg"
-                              ></div>
-                            </a>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                {/* <!-- /PORTFOLIO FILTER --> */}
-              </div>
-            </div>
-            {/* <!-- /PORTFOLIO --> */}
-
-            {/* <!-- TESTIMONIALS --> */}
-            <div className="arlo_tm_section" id="testimonials">
-              <div className="arlo_tm_testimonials_wrapper_all">
-                <div className="arlo_tm_universal_box_wrap">
-                  <div className="bg_wrap">
-                    <div
-                      className="overlay_image testimonial jarallax"
-                      data-speed="0"
-                    ></div>
-                    <div className="overlay_color testimonial"></div>
-                  </div>
-                  <div className="content testimonial">
-                    <div className="arlo_tm_testimonial_wrap">
-                      <div className="container">
-                        <div className="carousel_wrap">
-                          <ul className="owl-carousel">
-                            <li className="item">
-                              <div className="inner">
-                                <div className="quotebox_wrap">
-                                  <i className="xcon-quote-left"></i>
-                                </div>
-                                <div className="definitions_wrap">
-                                  <p>
-                                    “Arlo team are easy to work with and helped
-                                    me make amazing websites in a short amount
-                                    of time. Thanks guys for works.”
-                                  </p>
-                                </div>
-                                <div className="name_holder">
-                                  <p>Antonio Baraley, CEO Founder</p>
-                                </div>
-                              </div>
-                            </li>
-                            <li className="item">
-                              <div className="inner">
-                                <div className="quotebox_wrap">
-                                  <i className="xcon-quote-left"></i>
-                                </div>
-                                <div className="definitions_wrap">
-                                  <p>
-                                    “We were looking for a logo with a touch of
-                                    modernism. Arlo grasped our needs and
-                                    produced a stunning design.”
-                                  </p>
-                                </div>
-                                <div className="name_holder">
-                                  <p>Calena Gomez, AOC Designer</p>
-                                </div>
-                              </div>
-                            </li>
-                            <li className="item">
-                              <div className="inner">
-                                <div className="quotebox_wrap">
-                                  <i className="xcon-quote-left"></i>
-                                </div>
-                                <div className="definitions_wrap">
-                                  <p>
-                                    “Awesome to work with Arlo. Good organized,
-                                    easy to communicate with, responsive with
-                                    next iterations.”
-                                  </p>
-                                </div>
-                                <div className="name_holder">
-                                  <p>Torren Winston, Photographer.</p>
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <!-- /TESTIMONIALS --> */}
-
-            {/* <!-- COUNTERBOX --> */}
-            <div className="arlo_tm_section">
-              <div className="container">
-                <div
-                  className="arlo_tm_counter_wrap"
-                  data-col="4"
-                  data-delay="300"
-                >
-                  <ul className="arlo_tm_counter_list arlo_tm_miniboxes">
+                  <ul className="competencies_grid">
+                    {/* Item 1 */}
                     <li>
-                      <div className="inner arlo_tm_minibox">
-                        <h3>
-                          <span>
-                            <span
-                              className="arlo_tm_counter"
-                              data-from="0"
-                              data-to="2222"
-                              data-speed="3000"
-                            >
-                              0
-                            </span>
-                          </span>
-                        </h3>
-                        <span>Projects Completed</span>
+                      <div className="competency_item">
+                        <div className="competency_icon">
+                          <i className="xcon-laptop" style={{ fontSize: '24px' }}></i>
+                        </div>
+                        <h3 className="competency_title">{t('services.backendTitle')}</h3>
+                        <p className="competency_desc">{t('services.backendDesc')}</p>
                       </div>
                     </li>
+
+                    {/* Item 2 */}
                     <li>
-                      <div className="inner arlo_tm_minibox">
-                        <h3>
-                          <span>
-                            <span
-                              className="arlo_tm_counter"
-                              data-from="0"
-                              data-to="333"
-                              data-speed="3000"
-                            >
-                              0
-                            </span>
-                            K
-                          </span>
-                        </h3>
-                        <span>Lines of Code</span>
+                      <div className="competency_item">
+                        <div className="competency_icon">
+                          <i className="xcon-lock" style={{ fontSize: '24px' }}></i>
+                        </div>
+                        <h3 className="competency_title">{t('services.authTitle')}</h3>
+                        <p className="competency_desc">{t('services.authDesc')}</p>
                       </div>
                     </li>
+
+                    {/* Item 3 */}
                     <li>
-                      <div className="inner arlo_tm_minibox">
-                        <h3>
-                          <span>
-                            <span
-                              className="arlo_tm_counter"
-                              data-from="0"
-                              data-to="8888"
-                              data-speed="3000"
-                            >
-                              0
-                            </span>
-                          </span>
-                        </h3>
-                        <span>Happy Clients</span>
+                      <div className="competency_item">
+                        <div className="competency_icon">
+                          <i className="xcon-cog" style={{ fontSize: '24px' }}></i>
+                        </div>
+                        <h3 className="competency_title">{t('services.databaseTitle')}</h3>
+                        <p className="competency_desc">{t('services.databaseDesc')}</p>
                       </div>
                     </li>
+
+                    {/* Item 4 */}
                     <li>
-                      <div className="inner arlo_tm_minibox">
-                        <h3>
-                          <span>
-                            <span
-                              className="arlo_tm_counter"
-                              data-from="0"
-                              data-to="777"
-                              data-speed="3000"
-                            >
-                              0
-                            </span>
-                            +
-                          </span>
-                        </h3>
-                        <span>My Awwwards</span>
+                      <div className="competency_item">
+                        <div className="competency_icon">
+                          <i className="xcon-cc-visa" style={{ fontSize: '24px' }}></i>
+                        </div>
+                        <h3 className="competency_title">{t('services.paymentTitle')}</h3>
+                        <p className="competency_desc">{t('services.paymentDesc')}</p>
+                      </div>
+                    </li>
+
+                    {/* Item 5 */}
+                    <li>
+                      <div className="competency_item">
+                        <div className="competency_icon">
+                          <i className="xcon-upload" style={{ fontSize: '24px' }}></i>
+                        </div>
+                        <h3 className="competency_title">{t('services.devopsTitle')}</h3>
+                        <p className="competency_desc">{t('services.devopsDesc')}</p>
+                      </div>
+                    </li>
+
+                    {/* Item 6 */}
+                    <li>
+                      <div className="competency_item">
+                        <div className="competency_icon">
+                          <i className="xcon-desktop" style={{ fontSize: '24px' }}></i>
+                        </div>
+                        <h3 className="competency_title">{t('services.frontendTitle')}</h3>
+                        <p className="competency_desc">{t('services.frontendDesc')}</p>
                       </div>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            {/* <!-- /COUNTERBOX --> */}
+            {/* <!-- /CORE COMPETENCIES SECTION --> */}
 
-            {/* <!-- NEWS --> */}
-            <div className="arlo_tm_section" id="news">
-              <div className="arlo_tm_news_wrap">
+            {/* <!-- 5. FEATURED PROJECTS SECTION (KHÔNG TRÀN LỀ, HIỂN THỊ CHUẨN) --> */}
+            <div className="arlo_tm_section relative" id="portfolio">
+              <div className="arlo_tm_portfolio_wrapper_all" style={{ padding: '90px 0' }}>
                 <div className="container">
-                  <div className="arlo_tm_title_holder news">
-                    <h3>{t('news.title')}</h3>
-                    <span>{t('news.subtitle')}</span>
+                  <div className="arlo_tm_title_holder" style={{ marginBottom: '40px' }}>
+                    <h3>{t('portfolio.title')}</h3>
+                    <span>{t('portfolio.subtitle')}</span>
                   </div>
-                  <div className="arlo_tm_list_wrap blog_list">
-                    <ul className="total">
-                      <li className="wow fadeInUp" data-wow-duration="1.2s">
-                        <div className="inner_list">
-                          <div className="image_wrap">
-                            <img
-                              className="small"
-                              src="img/blog/500x350.jpg"
-                              alt=""
-                            />
-                            <img
-                              className="big"
-                              src="img/blog/1170x450.jpg"
-                              alt=""
-                            />
-                            <div
-                              className="news_image"
-                              data-url="img/blog/1.jpg"
-                            ></div>
-                            <a className="link_news" href="index.html"></a>
-                          </div>
-                          <div className="definitions_wrap">
-                            <div className="date_wrap">
-                              <p>
-                                January 22, 2018 <a href="index.html">Logos</a>
-                              </p>
-                            </div>
-                            <div className="title_holder">
-                              <h3>
-                                <a href="index.html">
-                                  How to Create Great Logo for Your Business
-                                </a>
-                              </h3>
-                            </div>
-                            <div className="definition">
-                              <p>
-                                If you are reading this, you probably plan to
-                                start a small business or a side hustle very
-                                soon. And you probably have ...
-                              </p>
-                            </div>
-                            <div className="full_def">
-                              <p>
-                                If you are reading this, you probably plan to
-                                start a small business or a side hustle very
-                                soon. And you probably have a couple of
-                                questions running through your mind like: Do I
-                                really need that logo? Or Yep, I really need
-                                one. But how can I get it on a budget? This post
-                                was created to help you bring system out of
-                                confusion so you can get the best out of your
-                                business and enter the market full force. First
-                                of all, yes, you do need a logo, and it does not
-                                really matter how big or small your business is.
-                                Even if you making a craft soap and sell it to
-                                your relatives and friends, you still need a
-                                logo. If you plan to monetize an idea, you need
-                                a logo for it. Otherwise your work, your
-                                efforts, your image and your future brand belong
-                                to everyone, like grapes at a grocery store. But
-                                most importantly, the final design you come up
-                                with should be effective enough to promote your
-                                business and get you that place in the sun. Here
-                                are a few tips that will make the whole process
-                                easier and more fun. The first step to a killer
-                                logo is an idea. So start feeding your brain
-                                with new impressions and experiences. Use
-                                anything that works for you. Try hiking and gain
-                                inspiration from nature. Or visit an art
-                                gallery. Meditation, photography, action sports
-                                In a nutshell, any kind of activity that fills
-                                you up with energy and joy may help you get that
-                                revolutionary idea. It is always useful to
-                                browse the websites (or social media profiles)
-                                of your potential rivals to not only judge their
-                                logos but to practice analysis. Do you find your
-                                competitor logo effective or attractive? Try to
-                                think of the ways it helps the rival company to
-                                be profitable. Is there something you would
-                                change? Why? All of these questions can really
-                                help you to improve your own perception of your
-                                brand as well as the future marketing strategy.
-                                Find out what the strengths and weaknesses of
-                                your rivals are and benefit from that knowledge.
-                                When it comes to logo design, there are and
-                                always will be several safe choices like bold
-                                and elegant black and white logos or serif font
-                                wordmarks. But if you are striving to get that
-                                killer logo, do not be afraid to cross the line
-                                and try something rebellious. Go out there and
-                                get to know the latest design trends. For
-                                example, you may experiment with the bold colors
-                                like Ultra Violet, which is the Pantone color of
-                                the year, by the way. Or play with the
-                                typography and color gradients.
-                              </p>
-                            </div>
-                            <div className="arlo_tm_popup_share_wrap">
-                              <ul>
-                                <li>
-                                  <a href="#">Facebook</a>
-                                </li>
-                                <li>
-                                  <a href="#">Twitter</a>
-                                </li>
-                                <li>
-                                  <a href="#">Linkedin</a>
-                                </li>
-                                <li>
-                                  <a href="#">Behance</a>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="read_more">
-                              <a href="#">
-                                <span>Read More</span>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li
-                        className="wow fadeInUp"
-                        data-wow-duration="1.2s"
-                        data-wow-delay="0.2s"
-                      >
-                        <div className="inner_list">
-                          <div className="image_wrap">
-                            <img
-                              className="small"
-                              src="img/blog/500x350.jpg"
-                              alt=""
-                            />
-                            <img
-                              className="big"
-                              src="img/blog/1170x450.jpg"
-                              alt=""
-                            />
-                            <div
-                              className="news_image"
-                              data-url="img/blog/2.jpg"
-                            ></div>
-                            <a className="link_news" href="index.html"></a>
-                          </div>
-                          <div className="definitions_wrap">
-                            <div className="date_wrap">
-                              <p>
-                                February 07, 2018{" "}
-                                <a href="index.html">Illustrator</a>
-                              </p>
-                            </div>
-                            <div className="title_holder">
-                              <h3>
-                                <a href="index.html">
-                                  How to Autumn Clean Your Design Career?
-                                </a>
-                              </h3>
-                            </div>
-                            <div className="definition">
-                              <p>
-                                Spring cleaning is not just about washing
-                                windows and clearing away cobwebs. Your design
-                                career also needs a thorough ...
-                              </p>
-                            </div>
-                            <div className="full_def">
-                              <p>
-                                Whether you are a freelancer or an in-house
-                                designer, or at a studio or agency, you will
-                                probably have to rebrand at the and Whether you
-                                are a freelancer or an in-house designer, or at
-                                a studio or agency, you will probably have to
-                                rebrand at the and Whether yo are a freelancer
-                                or an in-house designer, or at a studio or
-                                agency, you'll probably have to rebrand at the
-                                andWhether you are a freelancer or an in-house
-                                designer, or at a studio or agency, you will
-                                probably have to rebrand at the andWhether yo
-                                are a freelancer or an in-house designer, or at
-                                a studio or agency, you will probably have to
-                                rebrand at the and.Whether you are a freelancer
-                                or an in-house designer, or at a studio or
-                                agency, you will probably have to rebrand at the
-                                and Whether you are a freelancer or an in-house
-                                designer, or at a studio or agency, you will
-                                probably have to rebrand at the andWhether youa
-                                are a freelancer or an in-house designer, or at
-                                a studio or agency.
-                              </p>
-                            </div>
-                            <div className="arlo_tm_popup_share_wrap">
-                              <ul>
-                                <li>
-                                  <a href="#">Facebook</a>
-                                </li>
-                                <li>
-                                  <a href="#">Twitter</a>
-                                </li>
-                                <li>
-                                  <a href="#">Linkedin</a>
-                                </li>
-                                <li>
-                                  <a href="#">Behance</a>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="read_more">
-                              <a href="#">
-                                <span>Read More</span>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li
-                        className="wow fadeInUp"
-                        data-wow-duration="1.2s"
-                        data-wow-delay="0.4s"
-                      >
-                        <div className="inner_list">
-                          <div className="image_wrap">
-                            <img
-                              className="small"
-                              src="img/blog/500x350.jpg"
-                              alt=""
-                            />
-                            <img
-                              className="big"
-                              src="img/blog/1170x450.jpg"
-                              alt=""
-                            />
-                            <div
-                              className="news_image"
-                              data-url="img/blog/3.jpg"
-                            ></div>
-                            <a className="link_news" href="index.html"></a>
-                          </div>
-                          <div className="definitions_wrap">
-                            <div className="date_wrap">
-                              <p>
-                                April 12, 2018 <a href="index.html">Branding</a>
-                              </p>
-                            </div>
-                            <div className="title_holder">
-                              <h3>
-                                <a href="index.html">
-                                  Innovative Ways to Increase Brand
-                                </a>
-                              </h3>
-                            </div>
-                            <div className="definition">
-                              <p>
-                                Having a solid, trusted brand is important for
-                                your company to thrive. If your target audience
-                                does not know or trust ...
-                              </p>
-                            </div>
-                            <div className="full_def">
-                              <p>
-                                Having a solid, trusted brand is important for
-                                your company to thrive. If your target audience
-                                does not know or trust your brand, how will you
-                                ever increase your customer base and sales? Here
-                                are six innovative strategies you can use to
-                                increase brand awareness and help your business
-                                thrive. Inviting influencers into your niche is
-                                a great way to increase brand awareness and
-                                hopefully drive sales. When influencers have an
-                                established audience that knows and trusts them,
-                                once they mention your product(s) and discuss
-                                your brand in their content, those mentions will
-                                expand your reach and increase peoples awareness
-                                of your product. Ikonick is a perfect example of
-                                a company that works directly with influencers:
-                                It sells canvas art for your home and office.
-                                The way Ikonick uses influencers involves
-                                providing them with art and having those
-                                influencers pose with the art, then share the
-                                photos on social media. "Our relationships are
-                                an important part of our business," co-founder
-                                Mark Mastrandrea told me. "Our relationships
-                                make up our community, and the community is how
-                                our brand grows." Ikonick uses all types of
-                                influencers, from Instagram photographers to
-                                celebrities. The companys social strategy has
-                                enabled it to scale and grow exponentially
-                                because its influencers become part of its sales
-                                team -- even ambassadors. The relationship is
-                                mutually rewarding, Mastrandrea said. Companies
-                                can also offer to sponsor influencers at an
-                                event (if they do that sort of thing) and even
-                                use them as spokespersons for their brand and
-                                product(s). A lot of CrossFit-related companies
-                                do this, including Rogue Fitness, which sponsors
-                                certain athletes with clothing. The athlete then
-                                becomes a walking billboard for the company.
-                                Have you ever received an order that came in
-                                branded packaging? Rather than see it as just
-                                another shipment, perhaps you felt that that
-                                that special branding made the package seem like
-                                a gift. The team knows that the product
-                                experience doesn't commence at first use, but
-                                rather at the unboxing stage. How companies
-                                present their brand, and the story they tell
-                                through their design and graphics, can create an
-                                emotional connection with the customer that may
-                                last even longer than the product itself.
-                              </p>
-                            </div>
-                            <div className="arlo_tm_popup_share_wrap">
-                              <ul>
-                                <li>
-                                  <a href="#">Facebook</a>
-                                </li>
-                                <li>
-                                  <a href="#">Twitter</a>
-                                </li>
-                                <li>
-                                  <a href="#">Linkedin</a>
-                                </li>
-                                <li>
-                                  <a href="#">Behance</a>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="read_more">
-                              <a href="#">
-                                <span>Read More</span>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
+
+                  {/* INTERACTIVE PROJECT SLIDER */}
+                  <ProjectSlider />
+                </div>
+              </div>
+            </div>
+            {/* <!-- /FEATURED PROJECTS SECTION --> */}
+
+            {/* <!-- 6. ACHIEVEMENTS & EDUCATION SECTION (KHÔNG LỖI SỐ, KHÔNG CHỒNG LÊN NHAU) --> */}
+            <div className="arlo_tm_section" id="achievements">
+              <div style={{ padding: '90px 0', background: '#fafafa', clear: 'both', width: '100%', float: 'left' }}>
+                <div className="container">
+                  <div className="arlo_tm_title_holder">
+                    <h3>{t('achievements.title')}</h3>
+                    <span>{t('achievements.subtitle')}</span>
+                  </div>
+
+                  {/* 4 STATS BOXES GRID */}
+                  <div className="achievements_stats_grid">
+                    <div className="achievement_stat_box">
+                      <div className="achievement_stat_number">3.45</div>
+                      <div className="achievement_stat_title">{t('achievements.gpaLabel')} (4.0)</div>
+                      <p className="achievement_stat_desc">{t('achievements.gpaDesc')}</p>
+                    </div>
+
+                    <div className="achievement_stat_box">
+                      <div className="achievement_stat_number">01</div>
+                      <div className="achievement_stat_title">{t('achievements.scholarshipLabel')}</div>
+                      <p className="achievement_stat_desc">{t('achievements.scholarshipDesc')}</p>
+                    </div>
+
+                    <div className="achievement_stat_box">
+                      <div className="achievement_stat_number">01+</div>
+                      <div className="achievement_stat_title">{t('achievements.projectsLabel')}</div>
+                      <p className="achievement_stat_desc">{t('achievements.projectsDesc')}</p>
+                    </div>
+
+                    <div className="achievement_stat_box">
+                      <div className="achievement_stat_number">100%</div>
+                      <div className="achievement_stat_title">{t('achievements.dedicationLabel')}</div>
+                      <p className="achievement_stat_desc">{t('achievements.dedicationDesc')}</p>
+                    </div>
+                  </div>
+
+                  {/* 4 ACADEMIC & RESEARCH CARDS (2x2 GRID) */}
+                  <div className="achievements_cards_grid">
+                    <div className="achievement_card">
+                      <h4>{t('achievements.card1Title')}</h4>
+                      <span className="achievement_sub">{t('achievements.card1Subtitle')}</span>
+                      <p>{t('achievements.card1Desc')}</p>
+                    </div>
+
+                    <div className="achievement_card">
+                      <h4>{t('achievements.card2Title')}</h4>
+                      <span className="achievement_sub">{t('achievements.card2Subtitle')}</span>
+                      <p>{t('achievements.card2Desc')}</p>
+                    </div>
+
+                    <div className="achievement_card">
+                      <h4>{t('achievements.card3Title')}</h4>
+                      <span className="achievement_sub">{t('achievements.card3Subtitle')}</span>
+                      <p>{t('achievements.card3Desc')}</p>
+                    </div>
+
+                    <div className="achievement_card">
+                      <h4>{t('achievements.card4Title')}</h4>
+                      <span className="achievement_sub">{t('achievements.card4Subtitle')}</span>
+                      <p>{t('achievements.card4Desc')}</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            {/* <!-- /NEWS --> */}
+            {/* <!-- /ACHIEVEMENTS & EDUCATION SECTION --> */}
 
-            {/* <!-- CONTACT & FOOTER --> */}
+            {/* <!-- 7. CONTACT & FOOTER SECTION --> */}
             <div className="arlo_tm_section" id="contact">
-              <div className="container">
-                <div className="arlo_tm_title_holder contact">
-                  <h3>{t('contact.title')}</h3>
-                  <span>{t('contact.subtitle')}</span>
-                </div>
-              </div>
-              <div className="arlo_tm_footer_contact_wrapper_all">
-                <div className="arlo_tm_contact_wrap_all">
-                  <div className="container">
-                    <div className="leftbox">
-                      <div className="arlo_tm_mini_title_holder contact">
+              <div style={{ padding: '90px 0 0 0', clear: 'both', width: '100%', float: 'left' }}>
+                <div className="container">
+                  <div className="arlo_tm_title_holder contact">
+                    <h3>{t('contact.title')}</h3>
+                    <span>{t('contact.subtitle')}</span>
+                  </div>
+
+                  <div className="contact_section_grid">
+                    {/* LEFT COLUMN: CONTACT INFO */}
+                    <div>
+                      <div className="arlo_tm_mini_title_holder contact" style={{ marginBottom: '25px' }}>
                         <h4>{t('contact.getInTouch')}</h4>
                       </div>
                       <div className="short_info_wrap">
-                        <ul>
-                          <li>
-                            <p>
-                              <label>{t('contact.labels.address')}:</label>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                          <li style={{ marginBottom: '16px', fontSize: '15px' }}>
+                            <p style={{ margin: 0 }}>
+                              <strong style={{ color: '#111111', marginRight: '6px' }}>{t('contact.labels.address')}:</strong>
                               <span>{t('contact.address')}</span>
                             </p>
                           </li>
-                          <li>
-                            <p>
-                              <label>{t('contact.labels.email')}:</label>
+                          <li style={{ marginBottom: '16px', fontSize: '15px' }}>
+                            <p style={{ margin: 0 }}>
+                              <strong style={{ color: '#111111', marginRight: '6px' }}>{t('contact.labels.email')}:</strong>
                               <span>
-                                <a href="mailto:example@gmail.com">
+                                <a href="mailto:nquanghuycv@gmail.com" style={{ color: '#E3872D', textDecoration: 'none' }}>
                                   {t('contact.email')}
                                 </a>
                               </span>
                             </p>
                           </li>
-                          <li>
-                            <p>
-                              <label>{t('contact.labels.phone')}:</label>
-                              <span>{t('contact.phone')}</span>
+                          <li style={{ marginBottom: '16px', fontSize: '15px' }}>
+                            <p style={{ margin: 0 }}>
+                              <strong style={{ color: '#111111', marginRight: '6px' }}>{t('contact.labels.phone')}:</strong>
+                              <span>
+                                <a href="tel:0819012251" style={{ color: '#E3872D', textDecoration: 'none' }}>
+                                  {t('contact.phone')}
+                                </a>
+                              </span>
                             </p>
                           </li>
-                          <li>
-                            <p>
-                              <label>{t('contact.labels.website')}:</label>
+                          <li style={{ marginBottom: '16px', fontSize: '15px' }}>
+                            <p style={{ margin: 0 }}>
+                              <strong style={{ color: '#111111', marginRight: '6px' }}>{t('contact.labels.github')}:</strong>
                               <span>
-                                <a href="mailto:example@gmail.com">
-                                  {t('contact.website')}
+                                <a
+                                  href="https://github.com/HuyBeros"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: '#E3872D', textDecoration: 'none' }}
+                                >
+                                  github.com/HuyBeros
                                 </a>
                               </span>
                             </p>
@@ -1278,61 +812,135 @@ function App() {
                         </ul>
                       </div>
                     </div>
-                    <div className="rightbox">
-                      <div className="arlo_tm_contact_wrap">
-                        <div className="main_input_wrap">
-                          <form
-                            action="http://frenify.com/"
-                            method="post"
-                            className="contact_form"
-                            id="contact_form"
+
+                    {/* RIGHT COLUMN: CONTACT FORM */}
+                    <div>
+                      <form onSubmit={handleFormSubmit} className="contact_form">
+                        {formSubmitted && (
+                          <div
+                            style={{
+                              background: '#e8f5e9',
+                              color: '#2e7d32',
+                              padding: '12px 16px',
+                              borderRadius: '6px',
+                              marginBottom: '16px',
+                              fontSize: '14px',
+                              fontWeight: 600,
+                            }}
                           >
-                            <div
-                              className="returnmessage"
-                              data-success={t('contact.successMessage')}
-                            ></div>
-                            <div className="empty_notice">
-                              <span>{t('contact.fillRequired')}</span>
-                            </div>
-                            <div className="wrap">
-                              <input
-                                id="name"
-                                type="text"
-                                placeholder={t('contact.yourName')}
-                              />
-                            </div>
-                            <div className="wrap">
-                              <input
-                                id="email"
-                                type="text"
-                                placeholder={t('contact.yourEmail')}
-                              />
-                            </div>
-                            <div className="wrap">
-                              <textarea
-                                id="message"
-                                placeholder={t('contact.yourMessage')}
-                              ></textarea>
-                            </div>
-                            <div className="arlo_tm_button">
-                              <a id="send_message" href="#">
-                                <span>{t('contact.sendMessage')}</span>
-                              </a>
-                            </div>
-                          </form>
+                            {t('contact.successMessage')}
+                          </div>
+                        )}
+
+                        {formError && (
+                          <div
+                            style={{
+                              background: '#ffebee',
+                              color: '#c62828',
+                              padding: '12px 16px',
+                              borderRadius: '6px',
+                              marginBottom: '16px',
+                              fontSize: '14px',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {formError}
+                          </div>
+                        )}
+
+                        <div className="wrap" style={{ marginBottom: '15px' }}>
+                          <input
+                            id="name"
+                            type="text"
+                            placeholder={t('contact.yourName')}
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '12px 15px', borderRadius: '6px', border: '1px solid #ddd' }}
+                          />
                         </div>
-                      </div>
+                        <div className="wrap" style={{ marginBottom: '15px' }}>
+                          <input
+                            id="email"
+                            type="email"
+                            placeholder={t('contact.yourEmail')}
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '12px 15px', borderRadius: '6px', border: '1px solid #ddd' }}
+                          />
+                        </div>
+                        <div className="wrap" style={{ marginBottom: '15px' }}>
+                          <input
+                            id="subject"
+                            type="text"
+                            placeholder={t('contact.yourSubject')}
+                            value={formData.subject}
+                            onChange={handleInputChange}
+                            style={{ width: '100%', padding: '12px 15px', borderRadius: '6px', border: '1px solid #ddd' }}
+                          />
+                        </div>
+                        <div className="wrap" style={{ marginBottom: '15px' }}>
+                          <textarea
+                            id="message"
+                            placeholder={t('contact.yourMessage')}
+                            value={formData.message}
+                            onChange={handleInputChange}
+                            required
+                            rows={5}
+                            style={{ width: '100%', padding: '12px 15px', borderRadius: '6px', border: '1px solid #ddd' }}
+                          ></textarea>
+                        </div>
+                        <div>
+                          <button
+                            type="submit"
+                            style={{
+                              background: '#E3872D',
+                              color: '#ffffff',
+                              border: 'none',
+                              padding: '12px 32px',
+                              borderRadius: '30px',
+                              fontSize: '14px',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              transition: 'all 0.25s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#111111';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#E3872D';
+                            }}
+                          >
+                            {t('contact.sendMessage')}
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
-                <div className="arlo_tm_footer_wrap">
+
+                <div
+                  className="arlo_tm_footer_wrap"
+                  style={{
+                    background: '#041230',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    padding: '32px 0',
+                    width: '100%',
+                    clear: 'both',
+                    float: 'left',
+                    textAlign: 'center',
+                  }}
+                >
                   <div className="container">
-                    <p>{t('contact.copyright')}</p>
+                    <p style={{ color: '#94a3b8', margin: 0, fontSize: '13.5px', letterSpacing: '0.3px' }}>
+                      {t('contact.copyright')}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-            {/* <!-- /CONTACT & FOOTER --> */}
+            {/* <!-- /CONTACT & FOOTER SECTION --> */}
           </div>
         </div>
         {/* <!-- /RIGHTPART --> */}

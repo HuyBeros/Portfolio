@@ -505,14 +505,15 @@ function arlo_tm_totop_myhide(){
 // -------------   ANIMATE TEXT  -------------------
 // -------------------------------------------------
 
-function arlo_tm_animate_text(){
+function arlo_tm_animate_text(customStrings){
 	
 	"use strict";
 	
 	var animateSpan			= jQuery('.arlo_tm_animation_text_word');
+	jQuery('.typed-cursor').remove();
 	
 		animateSpan.typed({
-			strings: ["Backend Developer", "Freelancer", "Student"],
+			strings: (customStrings && customStrings.length) ? customStrings : ["Sinh viên kỹ thuật phần mềm HaUI", "Lập trình viên Java", "lập trình viên fullstack"],
 			loop: true,
 			startDelay: 1e3,
 			backDelay: 2e3
@@ -522,6 +523,8 @@ function arlo_tm_animate_text(){
 // -----------------------------------------------------
 // -------------------    POPUP BLOG    ----------------
 // -----------------------------------------------------
+
+window.arlo_tm_animate_text = arlo_tm_animate_text;
 
 function arlo_tm_popup_blog(){
 	"use strict";
