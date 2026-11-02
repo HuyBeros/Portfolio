@@ -82,6 +82,7 @@ function App() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSuccessMessage, setFormSuccessMessage] = useState('');
   const [formError, setFormError] = useState('');
 
   const handleInputChange = (
@@ -90,10 +91,6 @@ function App() {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
-
-  // Cấu hình dịch vụ gửi email miễn phí (Web3Forms hoặc Formspree)
-  // Lấy Access Key miễn phí trong 30 giây tại: https://web3forms.com (nhập nquanghuycv@gmail.com)
-  const WEB3FORMS_ACCESS_KEY = 'd9ed798b-2758-4ab5-a446-b4a4cbf32573';
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,48 +102,49 @@ function App() {
     setFormError('');
     setIsSubmitting(true);
 
-    // Nếu đã cấu hình key thật từ web3forms.com
-    if (WEB3FORMS_ACCESS_KEY && WEB3FORMS_ACCESS_KEY !== 'YOUR_ACCESS_KEY_HERE') {
-      try {
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_ACCESS_KEY,
-            from_name: formData.name,
-            email: formData.email,
-            subject: formData.subject.trim() || `Portfolio Contact từ ${formData.name}`,
-            message: formData.message,
-          }),
-        });
+    try {
+      // Gửi email tự động qua FormSubmit.co (chạy ngầm AJAX, không mở tab mới)
+      const response = await fetch('https://formsubmit.co/ajax/nquanghuycv@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _subject: formData.subject.trim() || `Liên hệ từ ${formData.name} qua Portfolio`,
+          message: formData.message,
+          _captcha: 'false',
+          _template: 'table',
+        }),
+      });
 
-        const data = await response.json();
-        if (data.success) {
-          setFormSubmitted(true);
-          setFormData({ name: '', email: '', subject: '', message: '' });
-          setIsSubmitting(false);
-          return;
-        } else {
-          throw new Error(data.message || 'Lỗi gửi tin nhắn');
-        }
-      } catch (err: any) {
-        console.error('Web3Forms Error:', err);
+      const data = await response.json();
+      if (data.success === 'true' || data.success === true) {
+        setFormSubmitted(true);
+        setFormSuccessMessage(t('contact.successMessage'));
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else if (data.message && data.message.includes('Activation')) {
+        setFormSubmitted(true);
+        setFormSuccessMessage(
+          language === 'vi'
+            ? 'Đã gửi email kích hoạt lần đầu! Bạn chỉ cần vào Gmail nquanghuycv@gmail.com bấm nút "Activate Form" để hoàn tất.'
+            : 'First-time activation sent! Please open nquanghuycv@gmail.com and click "Activate Form".'
+        );
+      } else {
+        throw new Error(data.message || 'Lỗi gửi tin nhắn');
       }
+    } catch (err: any) {
+      console.error('Submit error:', err);
+      setFormError(
+        language === 'vi'
+          ? 'Không thể gửi trực tiếp từ mạng của bạn lúc này. Vui lòng bấm nút "Mở Gmail để gửi" bên dưới để gửi nhanh qua Gmail.'
+          : 'Unable to send directly. Please click the "Compose in Gmail" button below.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Fallback: Mở mailto client để không làm gián đoạn liên lạc nếu chưa gắn key
-    const subject = encodeURIComponent(
-      formData.subject.trim() || `Portfolio Contact from ${formData.name}`
-    );
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    );
-    window.open(`mailto:nquanghuycv@gmail.com?subject=${subject}&body=${body}`, '_blank');
-    setFormSubmitted(true);
-    setIsSubmitting(false);
   };
 
   return (
@@ -871,9 +869,10 @@ function App() {
                               marginBottom: '16px',
                               fontSize: '14px',
                               fontWeight: 600,
+                              lineHeight: 1.5,
                             }}
                           >
-                            {t('contact.successMessage')}
+                            ✔ {formSuccessMessage || t('contact.successMessage')}
                           </div>
                         )}
 
@@ -936,7 +935,7 @@ function App() {
                             style={{ width: '100%', padding: '12px 15px', borderRadius: '6px', border: '1px solid #ddd' }}
                           ></textarea>
                         </div>
-                        <div>
+                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
                           <button
                             type="submit"
                             disabled={isSubmitting}
@@ -953,6 +952,7 @@ function App() {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '8px',
+                              boxShadow: '0 4px 14px rgba(227, 135, 45, 0.3)',
                             }}
                             onMouseEnter={(e) => {
                               if (!isSubmitting) e.currentTarget.style.background = '#111111';
@@ -963,6 +963,39 @@ function App() {
                           >
                             <span>{isSubmitting ? (language === 'vi' ? 'Đang gửi...' : 'Sending...') : t('contact.sendMessage')}</span>
                           </button>
+
+                          <a
+                            href={`https://mail.google.com/mail/?view=cm&fs=1&to=nquanghuycv@gmail.com&su=${encodeURIComponent(formData.subject.trim() || `Portfolio Contact từ ${formData.name || 'Khách'}`)}&body=${encodeURIComponent(`Xin chào Nguyễn Quang Huy,\n\nTôi gửi lời nhắn từ website portfolio:\nHọ và tên: ${formData.name}\nEmail: ${formData.email}\n\nNội dung liên hệ:\n${formData.message}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              background: '#f8fafc',
+                              border: '1px solid #cbd5e1',
+                              color: '#334155',
+                              padding: '11px 22px',
+                              borderRadius: '30px',
+                              fontSize: '13.5px',
+                              fontWeight: 600,
+                              textDecoration: 'none',
+                              transition: 'all 0.25s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.borderColor = '#E3872D';
+                              e.currentTarget.style.color = '#E3872D';
+                              e.currentTarget.style.background = '#ffffff';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = '#cbd5e1';
+                              e.currentTarget.style.color = '#334155';
+                              e.currentTarget.style.background = '#f8fafc';
+                            }}
+                          >
+                            <span>{language === 'vi' ? 'Mở Gmail để gửi' : 'Compose in Gmail'}</span>
+                            <span>↗</span>
+                          </a>
                         </div>
                       </form>
                     </div>
