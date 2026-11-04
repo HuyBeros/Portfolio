@@ -38,6 +38,11 @@ export const ProjectSlider: React.FC = () => {
       image: '', // Slot để thêm ảnh demo sau: ví dụ '/img/portfolio/phonezone.png'
       mockupUrl: 'https://phonezone-app.onrender.com/',
       mockupBadge: 'PhoneZone Storefront',
+      mockupStats: [
+        { label: 'Cổng thanh toán', value: 'VNPay Sandbox', sub: 'Mã hóa HMAC-SHA512', color: '#10b981' },
+        { label: 'Hạ tầng Backend', value: 'Java 21 & Quarkus', sub: 'Deploy trên Render Cloud', color: '#E3872D' },
+        { label: 'Cơ sở dữ liệu', value: 'PostgreSQL', sub: 'Lưu trữ Cloud trên Neon', color: '#2563eb' },
+      ],
     },
     {
       id: 2,
@@ -51,52 +56,31 @@ export const ProjectSlider: React.FC = () => {
         t('portfolio.project2Feat1'),
         t('portfolio.project2Feat2'),
         t('portfolio.project2Feat3'),
-      ],
-      techStack: [
-        'Quarkus REST',
-        'PostgreSQL',
-        'React',
-        'Vite',
-        'Chart.js Analytics',
-        'RBAC Security',
-        'Docker',
-        'Render',
-      ],
-      liveUrl: 'https://phonezone-app.onrender.com/',
-      githubUrl: 'https://github.com/HuyBeros/PhoneZone',
-      image: '',
-      mockupUrl: 'https://phonezone-app.onrender.com/admin',
-      mockupBadge: 'PhoneZone Admin Portal',
-    },
-    {
-      id: 3,
-      tabTitle: t('portfolio.project3Tab'),
-      title: t('portfolio.project3Title'),
-      category: t('portfolio.project3Category'),
-      role: t('portfolio.project3Role'),
-      timeline: t('portfolio.project3Timeline'),
-      desc: t('portfolio.project3Desc'),
-      highlights: [
-        t('portfolio.project3Feat1'),
-        t('portfolio.project3Feat2'),
-        t('portfolio.project3Feat3'),
+        t('portfolio.project2Feat4'),
       ],
       techStack: [
         'Java 21',
         'Spring Boot 3',
-        'Spring Security',
-        'JWT Auth',
+        'Microservices',
+        'API Gateway',
+        'Payment Service',
+        'Bank Service',
+        'Catalog Service',
         'Spring Data JPA',
         'MySQL',
-        'Docker',
-        'Swagger / OpenAPI',
-        'Maven',
+        'Maven Multi-Module',
+        'RESTful APIs',
       ],
-      liveUrl: 'https://github.com/HuyBeros',
-      githubUrl: 'https://github.com/HuyBeros',
+      liveUrl: '',
+      githubUrl: 'https://github.com/huyhoangk5/BTL_HDV',
       image: '',
-      mockupUrl: 'https://api.huyberos.dev/swagger-ui',
-      mockupBadge: 'Spring Boot REST API Service',
+      mockupUrl: 'https://github.com/huyhoangk5/BTL_HDV',
+      mockupBadge: 'Spring Boot Microservices',
+      mockupStats: [
+        { label: 'Payment Service (:8085)', value: 'Thanh Toán & Hóa Đơn', sub: 'Xử lý Order & Transaction', color: '#10b981' },
+        { label: 'Bank Service (:8087)', value: 'Hệ Thống Ngân Hàng', sub: 'Xác thực tài khoản & số dư', color: '#E3872D' },
+        { label: 'Catalog Service (:8082)', value: 'Kho Sách & Thể Loại', sub: 'Spring Data JPA & MySQL', color: '#2563eb' },
+      ],
     },
   ];
 
@@ -220,45 +204,47 @@ export const ProjectSlider: React.FC = () => {
             0{currentSlide + 1} / 0{totalSlides}
           </div>
 
-          <a
-            href={activeProj.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: '#E3872D',
-              color: '#ffffff',
-              padding: '6px 18px',
-              borderRadius: '20px',
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '0.5px',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 3px 10px rgba(227, 135, 45, 0.3)',
-              transition: 'all 0.25s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#ff9d3b';
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#E3872D';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            <span
+          {activeProj.liveUrl && (
+            <a
+              href={activeProj.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                display: 'inline-block',
-                width: '7px',
-                height: '7px',
-                borderRadius: '50%',
-                background: '#ffffff',
+                background: '#E3872D',
+                color: '#ffffff',
+                padding: '6px 18px',
+                borderRadius: '20px',
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 3px 10px rgba(227, 135, 45, 0.3)',
+                transition: 'all 0.25s ease',
               }}
-            ></span>
-            <span>{t('portfolio.liveDemo')}</span>
-          </a>
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#ff9d3b';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#E3872D';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  background: '#ffffff',
+                }}
+              ></span>
+              <span>{t('portfolio.liveDemo')}</span>
+            </a>
+          )}
         </div>
 
         {/* DEMO PREVIEW WINDOW (CÓ CHỖ DỄ DÀNG ĐẶT ẢNH DEMO KHI CÓ) */}
@@ -334,29 +320,15 @@ export const ProjectSlider: React.FC = () => {
           ) : (
             <div style={{ padding: '24px 20px', minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
-                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>Cổng thanh toán</div>
-                  <div style={{ fontSize: '17px', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
-                    VNPay Sandbox
+                {activeProj.mockupStats?.map((stat, sIdx) => (
+                  <div key={sIdx} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px' }}>
+                    <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>{stat.label}</div>
+                    <div style={{ fontSize: '17px', fontWeight: 800, color: stat.color, marginTop: '4px' }}>
+                      {stat.value}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>{stat.sub}</div>
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>Mã hóa HMAC-SHA512</div>
-                </div>
-
-                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>Hạ tầng Backend</div>
-                  <div style={{ fontSize: '17px', fontWeight: 800, color: '#E3872D', marginTop: '4px' }}>
-                    Java 21 & Quarkus
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>Deploy trên Render Cloud</div>
-                </div>
-
-                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>Cơ sở dữ liệu</div>
-                  <div style={{ fontSize: '17px', fontWeight: 800, color: '#2563eb', marginTop: '4px' }}>
-                    PostgreSQL
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>Lưu trữ Cloud trên Neon</div>
-                </div>
+                ))}
               </div>
             </div>
           )}
@@ -516,36 +488,38 @@ export const ProjectSlider: React.FC = () => {
               paddingTop: '20px',
             }}
           >
-            <a
-              href={activeProj.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: '#E3872D',
-                color: '#ffffff',
-                padding: '10px 24px',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: 700,
-                textDecoration: 'none',
-                boxShadow: '0 4px 14px rgba(227, 135, 45, 0.3)',
-                transition: 'all 0.25s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#ff9d3b';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#E3872D';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <span>{t('portfolio.liveDemo')}</span>
-              <span>↗</span>
-            </a>
+            {activeProj.liveUrl && (
+              <a
+                href={activeProj.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#E3872D',
+                  color: '#ffffff',
+                  padding: '10px 24px',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 14px rgba(227, 135, 45, 0.3)',
+                  transition: 'all 0.25s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ff9d3b';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#E3872D';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <span>{t('portfolio.liveDemo')}</span>
+                <span>↗</span>
+              </a>
+            )}
 
             <a
               href={activeProj.githubUrl}

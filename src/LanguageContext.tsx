@@ -100,7 +100,6 @@ export interface Translations {
     backend: string;
     project1Tab: string;
     project2Tab: string;
-    project3Tab: string;
     project1Title: string;
     project1Category: string;
     project1Role: string;
@@ -118,14 +117,7 @@ export interface Translations {
     project2Feat1: string;
     project2Feat2: string;
     project2Feat3: string;
-    project3Title: string;
-    project3Category: string;
-    project3Role: string;
-    project3Timeline: string;
-    project3Desc: string;
-    project3Feat1: string;
-    project3Feat2: string;
-    project3Feat3: string;
+    project2Feat4: string;
     githubRepo: string;
     githubBackend: string;
     githubFrontend: string;
@@ -312,8 +304,7 @@ const translations: Record<Language, Translations> = {
       fullstack: 'Full-Stack',
       backend: 'Backend',
       project1Tab: 'PhoneZone — E-Commerce',
-      project2Tab: 'PhoneZone — Admin Dashboard',
-      project3Tab: 'Spring Boot REST API',
+      project2Tab: 'FBookShop — Microservices',
       project1Title: 'PhoneZone — E-Commerce & Repair Service Platform',
       project1Category: 'Full-Stack Web Application',
       project1Role: 'Fullstack Developer (Backend Focused)',
@@ -328,30 +319,20 @@ const translations: Record<Language, Translations> = {
         'Developed customer interface (product catalog, device comparison, repair booking) and administrative dashboard with revenue charts via Chart.js.',
       project1Feat4:
         'Containerized with Docker, deployed PostgreSQL on Neon Cloud, and hosted on Render with modern CI/CD practices.',
-      project2Title: 'PhoneZone — Admin Dashboard & Revenue Analytics Subsystem',
-      project2Category: 'Management & Analytics Module',
-      project2Role: 'Backend & Dashboard Developer',
-      project2Timeline: '2026',
+      project2Title: 'FBookShop — Microservices Bookstore Platform',
+      project2Category: 'Microservices Architecture & Spring Boot',
+      project2Role: 'Backend Developer (Payment, Bank & Catalog Services)',
+      project2Timeline: '2025',
       project2Desc:
-        'The specialized administration module of PhoneZone empowering business owners to manage inventory, process customer repair appointments, and track sales performance in real-time.',
+        'A distributed microservices-based bookstore management platform built with Java 21 and Spring Boot 3, featuring Maven multi-module architecture, centralized routing via API Gateway, and MySQL persistence.',
       project2Feat1:
-        'Interactive financial metrics and monthly sales charts powered by Chart.js and RESTful aggregation endpoints.',
+        'Payment Service (Port 8085): Managed checkout workflow, transaction lifecycle tracking, and secure inter-service communication with Order and Bank services.',
       project2Feat2:
-        'Repair booking management with status workflow transitions (Pending, In Progress, Completed, Cancelled).',
+        'Bank Service (Port 8087): Simulated banking subsystem with account balance verification, payment processing, and promotion/discount deductions.',
       project2Feat3:
-        'Comprehensive product inventory and customer account administration with audit trails.',
-      project3Title: 'Enterprise RESTful API & Security Service',
-      project3Category: 'Backend & Microservices Architecture',
-      project3Role: 'Backend Developer',
-      project3Timeline: '2025 - 2026',
-      project3Desc:
-        'High-performance backend RESTful API service built with Java 21 and Spring Boot, secured with Spring Security & stateless JWT, role-based authorization, and optimized queries with Spring Data JPA & MySQL.',
-      project3Feat1:
-        'Designed clean layered architecture (Controller, Service, Repository) with strict DTO validation and centralized exception handling.',
-      project3Feat2:
-        'Configured Spring Security Filter Chain, BCrypt password hashing, and stateless JWT authentication for protected endpoints.',
-      project3Feat3:
-        'Integrated automated interactive OpenAPI / Swagger UI documentation and Docker multi-stage containerization.',
+        'Catalog Service (Port 8082): Handled book inventory, categories, author filtering, pricing, and query optimization with Spring Data JPA & MySQL.',
+      project2Feat4:
+        'Maven Multi-Module & API Gateway (Port 8089): Engineered decoupled services with isolated domain databases and centralized API Gateway for scalable routing.',
       githubRepo: 'GitHub Repository',
       githubBackend: 'GitHub Backend',
       githubFrontend: 'GitHub Frontend',
@@ -368,9 +349,9 @@ const translations: Record<Language, Translations> = {
       scholarshipNumber: '01',
       scholarshipLabel: 'Academic Scholarship',
       scholarshipDesc: 'Academic Excellence Scholarship awarded in Semester 6',
-      projectsNumber: '01+',
-      projectsLabel: 'Fullstack System',
-      projectsDesc: 'End-to-end e-commerce platform ready for production deployment',
+      projectsNumber: '02+',
+      projectsLabel: 'Core Systems',
+      projectsDesc: 'PhoneZone (Quarkus) & FBookShop (Spring Boot Microservices)',
       dedicationNumber: '100%',
       dedicationLabel: 'Dedication & Proactivity',
       dedicationDesc: 'Passionate about clean code, robust architecture, and rapid learning',
@@ -526,8 +507,7 @@ const translations: Record<Language, Translations> = {
       fullstack: 'Full-Stack',
       backend: 'Backend',
       project1Tab: 'PhoneZone — E-Commerce',
-      project2Tab: 'PhoneZone — Admin Dashboard',
-      project3Tab: 'Spring Boot REST API',
+      project2Tab: 'FBookShop — Microservices',
       project1Title: 'PhoneZone — Nền tảng TMĐT & Đặt lịch sửa chữa thiết bị',
       project1Category: 'Ứng dụng Full-Stack',
       project1Role: 'Fullstack Developer (Trọng tâm Backend)',
@@ -542,30 +522,20 @@ const translations: Record<Language, Translations> = {
         'Phát triển giao diện React cho cả khách hàng lẫn admin dashboard, hỗ trợ so sánh sản phẩm, đặt lịch sửa chữa và biểu đồ doanh thu với Chart.js.',
       project1Feat4:
         'Đóng gói Docker, kết nối PostgreSQL trên Neon Cloud và triển khai hoàn chỉnh trên Render.',
-      project2Title: 'PhoneZone — Dashboard Quản trị & Thống kê doanh thu',
-      project2Category: 'Module Quản trị & Báo cáo',
-      project2Role: 'Backend & Dashboard Developer',
-      project2Timeline: '2026',
+      project2Title: 'FBookShop — Hệ thống Cửa hàng sách Kiến trúc Microservices',
+      project2Category: 'Kiến trúc Microservices & Spring Boot',
+      project2Role: 'Backend Developer (Phụ trách 3 Services: Payment, Bank, Catalog)',
+      project2Timeline: '2025',
       project2Desc:
-        'Hệ thống quản trị chuyên sâu của PhoneZone giúp người quản lý theo dõi doanh số, quản lý kho hàng và xử lý quy trình lịch hẹn sửa chữa theo thời gian thực.',
+        'Hệ thống thương mại điện tử bán sách trực tuyến xây dựng theo kiến trúc Microservices phân tán với Spring Boot 3 và Java 21, thiết kế chuẩn Maven Multi-Module, định tuyến qua API Gateway và lưu trữ CSDL MySQL.',
       project2Feat1:
-        'Trực quan hóa doanh thu theo tháng và danh mục sản phẩm thông qua biểu đồ Chart.js kết hợp API tổng hợp dữ liệu.',
+        'Payment Service (Port 8085): Xử lý quy trình thanh toán hóa đơn, kiểm soát trạng thái giao dịch và kết nối đồng bộ với dịch vụ Order & Bank.',
       project2Feat2:
-        'Quản lý vòng đời lịch đặt sửa chữa (Chờ tiếp nhận, Đang xử lý, Hoàn thành, Hủy lịch).',
+        'Bank Service (Port 8087): Mô phỏng hệ thống ngân hàng liên kết, xác thực tài khoản thẻ, kiểm tra số dư và áp dụng chiết khấu thanh toán tự động.',
       project2Feat3:
-        'Quản trị kho hàng, danh mục phụ kiện và phân quyền tài khoản người dùng bảo mật.',
-      project3Title: 'Hệ Thống RESTful API & Quản Lý Bảo Mật (Spring Boot)',
-      project3Category: 'Hệ thống Backend & Microservices',
-      project3Role: 'Backend Developer',
-      project3Timeline: '2025 - 2026',
-      project3Desc:
-        'Hệ thống RESTful API backend hiệu năng cao xây dựng với Java 21 và Spring Boot, bảo mật với Spring Security & stateless JWT, phân quyền tài khoản chi tiết và tích hợp tài liệu Swagger/OpenAPI.',
-      project3Feat1:
-        'Thiết kế RESTful API chuẩn phân tầng Controller - Service - Repository với DTO pattern và validation.',
-      project3Feat2:
-        'Cấu hình Spring Security Filter Chain, mã hóa mật khẩu BCrypt và quản lý phiên làm việc stateless với JWT.',
-      project3Feat3:
-        'Tích hợp tài liệu API tương tác tự động với Swagger / OpenAPI UI và đóng gói container Docker.',
+        'Catalog Service (Port 8082): Quản lý danh mục sách, thể loại, thông tin tác giả, tối ưu truy vấn kho hàng và dữ liệu với Spring Data JPA & MySQL.',
+      project2Feat4:
+        'Kiến trúc Multi-Module & API Gateway (Port 8089): Thiết kế phân tách module độc lập bằng Maven, định tuyến tập trung qua API Gateway và cơ sở dữ liệu phân tán.',
       githubRepo: 'Mã nguồn GitHub',
       githubBackend: 'GitHub Backend',
       githubFrontend: 'GitHub Frontend',
@@ -582,9 +552,9 @@ const translations: Record<Language, Translations> = {
       scholarshipNumber: '01',
       scholarshipLabel: 'Học Bổng Khuyến Khích',
       scholarshipDesc: 'Học bổng khuyến khích học tập đạt được trong Kỳ 6',
-      projectsNumber: '01+',
-      projectsLabel: 'Dự Án Fullstack Hoàn Chỉnh',
-      projectsDesc: 'Hệ thống thương mại điện tử & dịch vụ sẵn sàng chạy thực tế',
+      projectsNumber: '02+',
+      projectsLabel: 'Dự Án Tiêu Biểu',
+      projectsDesc: 'PhoneZone (Quarkus) & FBookShop (Spring Boot Microservices)',
       dedicationNumber: '100%',
       dedicationLabel: 'Nhiệt Huyết & Chủ Động',
       dedicationDesc: 'Đam mê Clean Code, kiến trúc chuẩn và khả năng tự nghiên cứu công nghệ mới',
